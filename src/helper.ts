@@ -4,7 +4,6 @@ import { Buffer } from 'node:buffer'
 import type { H3Event } from 'h3'
 import {
   getRequestHeader,
-  send,
   setResponseHeader,
 } from 'h3'
 
@@ -37,7 +36,7 @@ export async function compress(event: H3Event, response: Partial<RenderResponse>
 
   if (acceptsEncoding && typeof response.body === 'string') {
     setResponseHeader(event, 'Content-Encoding', method)
-    send(event, await compression(Buffer.from(response.body)))
+    response.body = await compression(Buffer.from(response.body))
   }
 }
 
