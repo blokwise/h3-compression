@@ -1,4 +1,4 @@
-# H3-compression
+# `@blokwise/h3-compression`
 
 [![npm version][npm-version-src]][npm-version-href]
 [![npm downloads][npm-downloads-src]][npm-downloads-href]
@@ -22,13 +22,13 @@
 
 ```bash
 # Using npm
-npm install h3-compression
+npm install @blokwise/h3-compression
 
 # Using yarn
-yarn add h3-compression
+yarn add @blokwise/h3-compression
 
 # Using pnpm
-pnpm add h3-compression
+pnpm add @blokwise/h3-compression
 ```
 
 ## Usage
@@ -36,7 +36,7 @@ pnpm add h3-compression
 ```ts
 import { createServer } from 'node:http'
 import { createApp, eventHandler, toNodeListener } from 'h3'
-import { useCompressionStream } from 'h3-compression'
+import { useCompressionStream } from '@blokwise/h3-compression'
 
 const app = createApp({ onBeforeResponse: useCompressionStream }) // or { onBeforeResponse: useCompression }
 app.use(
@@ -52,7 +52,7 @@ Example using <a href="https://github.com/unjs/listhen">listhen</a> for an elega
 ```ts
 import { createApp, eventHandler, toNodeListener } from 'h3'
 import { listen } from 'listhen'
-import { useCompressionStream } from 'h3-compression'
+import { useCompressionStream } from '@blokwise/h3-compression'
 
 const app = createApp({ onBeforeResponse: useCompressionStream }) // or { onBeforeResponse: useCompression }
 app.use(
@@ -69,7 +69,7 @@ If you want to use it in nuxt 3 you can define a nitro plugin.
 
 `server/plugins/compression.ts`
 ````ts
-import { useCompression } from 'h3-compression'
+import { useCompression } from '@blokwise/h3-compression'
 
 export default defineNitroPlugin((nitro) => {
   nitro.hooks.hook('render:response', async (response, { event }) => {
@@ -100,19 +100,11 @@ H3-compression has a concept of composable utilities that accept `event` (from `
 - `useDeflateCompressionStream(event, response)`
 - `useCompressionStream(event, response)`
 
-## Sponsors
-
-<p align="center">
-  <a href="https://pinia-orm.codedredd.de/sponsorkit/sponsors.png">
-    <img src='https://pinia-orm.codedredd.de/sponsorkit/sponsors.svg'/>
-  </a>
-</p>
-
 ## Releated Projects
 
 - [H3](https://github.com/unjs/h3)
 
-## License
+## Credits & License
 
 [MIT](./LICENSE) License © 2023-PRESENT [Gregor Becker](https://github.com/CodeDredd)
 
