@@ -2,7 +2,7 @@
   "name": "@blokwise/h3-compression",
   "type": "module",
   "version": "0.3.3",
-  "packageManager": "pnpm@8.7.0",
+  "packageManager": "pnpm@10.18.2",
   "description": "Adds compression to h3 request (brotli, gzip, deflate)",
   "author": {
     "name": "Gregor Becker",
@@ -50,9 +50,9 @@
     }
   },
   "files": [
-    "dist",
     "LICENSE",
-    "README.md"
+    "README.md",
+    "dist"
   ],
   "scripts": {
     "build": "unbuild",
@@ -66,29 +66,22 @@
     "prepare": "simple-git-hooks"
   },
   "peerDependencies": {
-    "h3": "^1.6.0"
+    "h3": "^1.6.0 || ^2.0.0"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^0.41.0",
-    "@antfu/ni": "^0.21.6",
-    "@antfu/utils": "^0.7.6",
-    "@types/node": "^20.5.7",
-    "@types/supertest": "^2.0.12",
-    "@vitest/coverage-v8": "^0.34.3",
-    "bumpp": "^9.2.0",
-    "eslint": "^8.48.0",
-    "esno": "^0.17.0",
-    "h3": "^1.8.1",
-    "lint-staged": "^14.0.1",
-    "node-fetch-native": "^1.4.0",
-    "pnpm": "^8.7.0",
-    "rimraf": "^5.0.1",
-    "simple-git-hooks": "^2.9.0",
-    "supertest": "^6.3.3",
-    "typescript": "^5.2.2",
-    "unbuild": "^2.0.0",
-    "vite": "^4.4.9",
-    "vitest": "^0.34.3"
+    "@antfu/eslint-config": "6.0.0",
+    "@types/node": "24.9.1",
+    "@types/supertest": "6.0.3",
+    "@vitest/coverage-v8": "3.2.4",
+    "eslint": "9.38.0",
+    "h3": "1.15.4",
+    "lint-staged": "16.2.5",
+    "node-fetch-native": "1.6.7",
+    "simple-git-hooks": "2.13.1",
+    "supertest": "7.1.4",
+    "typescript": "5.9.3",
+    "unbuild": "3.6.1",
+    "vitest": "3.2.4"
   },
   "simple-git-hooks": {
     "pre-commit": "pnpm lint-staged"
