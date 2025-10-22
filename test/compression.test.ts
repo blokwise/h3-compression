@@ -1,13 +1,12 @@
-import type { SuperTest, Test } from 'supertest'
-import supertest from 'supertest'
-import { beforeEach, describe, expect, it } from 'vitest'
 import type { App } from 'h3'
 import { createApp, eventHandler, toNodeListener } from 'h3'
+import supertest from 'supertest'
+import { beforeEach, describe, expect, it } from 'vitest'
 import { useCompression } from '../src'
 
 describe('use compression', () => {
   let app: App
-  let request: SuperTest<Test>
+  let request: ReturnType<typeof supertest>
 
   beforeEach(() => {
     app = createApp({ debug: true, onBeforeResponse: useCompression })
