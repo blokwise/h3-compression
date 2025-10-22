@@ -1,12 +1,12 @@
 import type { H3Event } from 'h3'
-import type { RenderResponse } from './helper'
-import { compressStream, getAnyCompression } from './helper'
+import type { RenderResponse } from './types'
+import { compressStream, getSuitableCompression } from './helper'
 
 /**
- * Compresses the response with
- * [CompressionStream(gzip)]{@link https://developer.mozilla.org/en-US/docs/Web/API/CompressionStream}
- * @param event - A H3 event object.
- * @param response - A response object with body parameter.
+ * Compresses the response with [CompressionStream(gzip)]{@link https://developer.mozilla.org/en-US/docs/Web/API/CompressionStream}.
+ *
+ * @param event H3 event object.
+ * @param response Response object with body prop.
  */
 export async function useGZipCompressionStream(
   event: H3Event,
@@ -16,10 +16,10 @@ export async function useGZipCompressionStream(
 }
 
 /**
- * Compresses the response with
- * [CompressionStream(deflate)]{@link https://developer.mozilla.org/en-US/docs/Web/API/CompressionStream}
- * @param event - A H3 event object.
- * @param response - A response object with body parameter.
+ * Compresses the response with [CompressionStream(deflate)]{@link https://developer.mozilla.org/en-US/docs/Web/API/CompressionStream}.
+ *
+ * @param event H3 event object.
+ * @param response Response object with body prop.
  */
 export async function useDeflateCompressionStream(
   event: H3Event,
@@ -29,18 +29,18 @@ export async function useDeflateCompressionStream(
 }
 
 /**
- * Compresses the response with
- * [CompressionStream]{@link https://developer.mozilla.org/en-US/docs/Web/API/CompressionStream}
- * by 'Accept-Encoding' header. Best is used first.
- * @param event - A H3 event object.
- * @param response - A response object with body parameter.
+ * Compresses the response with [CompressionStream]{@link https://developer.mozilla.org/en-US/docs/Web/API/CompressionStream} by 'Accept-Encoding' header. Best is used first.
+ *
+ * @param event H3 event object.
+ * @param response Response object with body prop.
  */
 export async function useCompressionStream(
   event: H3Event,
   response: Partial<RenderResponse>,
 ) {
-  const compression = getAnyCompression(event)
+  const compression = getSuitableCompression(event)
 
-  if (compression && compression !== 'br')
+  if (compression && compression !== 'br') {
     await compressStream(event, response, compression)
+  }
 }
