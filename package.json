@@ -54,12 +54,8 @@
   ],
   "scripts": {
     "prepare": "simple-git-hooks",
-    "dev": "unbuild --stub",
-    "play:prepare": "nuxi prepare .playground",
-    "play:dev": "nuxi dev .playground",
-    "build": "unbuild",
-    "lint": "eslint .",
-    "prepublishOnly": "nr build",
+    "dev:prepare": "nuxi prepare .playground",
+    "dev": "nuxi dev .playground",
     "test": "vitest",
     "test:types": "vitest typecheck"
   },
