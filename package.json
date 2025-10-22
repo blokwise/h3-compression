@@ -5,21 +5,15 @@
   "packageManager": "pnpm@10.18.2",
   "description": "Adds compression to h3 request (brotli, gzip, deflate)",
   "author": {
-    "name": "Gregor Becker",
-    "email": "gregor@codedredd.de"
-  },
-  "contributors": [{
     "name": "Julian Derungs",
     "email": "julian.derungs@deepbase.ch",
     "url": "https://github.com/aerophobic"
-  }],
+  },
   "license": "MIT",
-  "homepage": "https://github.com/blokwise/h3-compression#readme",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/blokwise/h3-compression.git"
   },
-  "bugs": "https://github.com/blokwise/h3-compression/issues",
   "keywords": [
     "h3",
     "h3-compression",
@@ -31,26 +25,22 @@
   "sideEffects": false,
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.cjs"
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs"
     }
   },
   "main": "./dist/index.mjs",
   "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
+  "types": "./dist/index.d.mts",
   "typesVersions": {
     "*": {
-      "*": [
-        "./dist/*",
-        "./dist/index.d.ts"
+      ".": [
+        "./dist/index.d.mts"
       ]
     }
   },
   "files": [
-    "LICENSE",
-    "README.md",
-    "dist"
+    "dist/**/*"
   ],
   "scripts": {
     "prepare": "simple-git-hooks",
@@ -58,6 +48,7 @@
     "dev": "nuxi dev .playground",
     "test": "vitest",
     "test:types": "vitest typecheck",
+    "prepack": "unbuild",
     "release": "NPM_TOKEN=$BLOKWISE_RELEE_NPM_TOKEN RELEE_GH_TOKEN=$BLOKWISE_RELEE_GH_TOKEN relee"
   },
   "peerDependencies": {
