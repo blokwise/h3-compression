@@ -10,3 +10,9 @@ export {
   useDeflateCompressionStream,
   useGZipCompressionStream,
 } from './compressionStream'
+
+export {
+  compress,
+  compressStream,
+  getMostSuitableCompression,
+} from './helper'
