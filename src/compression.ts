@@ -1,58 +1,67 @@
 import type { H3Event } from 'h3'
-import type { RenderResponse } from './helper'
-import { compress, getAnyCompression } from './helper'
+import type { CompressOptions, RenderResponse } from './types'
+import { compress, compressResponseBody, getMostSuitableCompression } from './helper'
 
 /**
- * Compresses the response with [zlib.gzip]{@link https://www.w3schools.com/nodejs/ref_zlib.asp}
- * @param { H3Event } event - A H3 event object.
- * @param { RenderResponse } response - A response object with body parameter.
- * @returns { Promise<void> }
+ * Compresses the response (body) with [zlib.gzip]{@link https://www.w3schools.com/nodejs/ref_zlib.asp}.
+ *
+ * @param event H3 event object.
+ * @param response Response object with body prop.
+ * @param opts Compression options.
  */
 export async function useGZipCompression(
   event: H3Event,
   response: Partial<RenderResponse>,
+  opts: CompressOptions = {},
 ): Promise<void> {
-  await compress(event, response, 'gzip')
+  await compressResponseBody(response, response => compress(event, response.body, 'gzip', opts))
 }
 
 /**
- * Compresses the response with [zlib.deflate]{@link https://www.w3schools.com/nodejs/ref_zlib.asp}
- * @param { H3Event } event - A H3 event object.
- * @param { RenderResponse } response - A response object with body parameter.
- * @returns { Promise<void> }
+ * Compresses the response (body) with [zlib.deflate]{@link https://www.w3schools.com/nodejs/ref_zlib.asp}.
+ *
+ * @param event H3 event object.
+ * @param response Response object with body prop.
+ * @param opts Compression options.
  */
 export async function useDeflateCompression(
   event: H3Event,
   response: Partial<RenderResponse>,
+  opts: CompressOptions = {},
 ): Promise<void> {
-  await compress(event, response, 'deflate')
+  await compressResponseBody(response, response => compress(event, response.body, 'deflate', opts))
 }
 
 /**
- * Compresses the response with [zlib.brotliCompress]{@link https://www.w3schools.com/nodejs/ref_zlib.asp}
- * @param { H3Event } event - A H3 event object.
- * @param { RenderResponse } response - A response object with body parameter.
- * @returns { Promise<void> }
+ * Compresses the response (body) with [zlib.brotliCompress]{@link https://www.w3schools.com/nodejs/ref_zlib.asp}.
+ *
+ * @param event H3 event object.
+ * @param response Response object with body prop.
+ * @param opts Compression options.
  */
 export async function useBrotliCompression(
   event: H3Event,
   response: Partial<RenderResponse>,
+  opts: CompressOptions = {},
 ): Promise<void> {
-  await compress(event, response, 'br')
+  await compressResponseBody(response, response => compress(event, response.body, 'br', opts))
 }
 
 /**
- * Compresses the response with [Zlib]{@link https://www.w3schools.com/nodejs/ref_zlib.asp}
- * by 'Accept-Encoding' header. Best is used first.
- * @param { H3Event } event - A H3 event object.
- * @param { RenderResponse } response - A response object with body parameter.
- * @returns { Promise<void> }
+ * Compresses the response (body) with [Zlib]{@link https://www.w3schools.com/nodejs/ref_zlib.asp} by 'Accept-Encoding' header. Best is used first.
+ *
+ * @param event H3 event object.
+ * @param response Response object with body prop.
+ * @param opts Compression options.
  */
 export async function useCompression(
   event: H3Event,
   response: Partial<RenderResponse>,
+  opts: CompressOptions = {},
 ): Promise<void> {
-  const compression = getAnyCompression(event)
-  if (compression)
-    await compress(event, response, compression)
+  const compression = getMostSuitableCompression(event)
+
+  if (compression) {
+    await compressResponseBody(response, response => compress(event, response.body, compression, opts))
+  }
 }

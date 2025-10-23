@@ -1,10 +1,4 @@
-# H3-compression
-
-[![npm version][npm-version-src]][npm-version-href]
-[![npm downloads][npm-downloads-src]][npm-downloads-href]
-[![bundle][bundle-src]][bundle-href]
-[![JSDocs][jsdocs-src]][jsdocs-href]
-[![License][license-src]][license-href]
+# `@blokwise/h3-compression`
 
 > Handles compression for H3
 
@@ -16,27 +10,25 @@
 
 ✔️ &nbsp;**Compression Detection:** It uses the best compression which is accepted
 
-
-
 ## Install
 
 ```bash
 # Using npm
-npm install h3-compression
+npm install @blokwise/h3-compression
 
 # Using yarn
-yarn add h3-compression
+yarn add @blokwise/h3-compression
 
 # Using pnpm
-pnpm add h3-compression
+pnpm add @blokwise/h3-compression
 ```
 
 ## Usage
 
 ```ts
 import { createServer } from 'node:http'
+import { useCompressionStream } from '@blokwise/h3-compression'
 import { createApp, eventHandler, toNodeListener } from 'h3'
-import { useCompressionStream } from 'h3-compression'
 
 const app = createApp({ onBeforeResponse: useCompressionStream }) // or { onBeforeResponse: useCompression }
 app.use(
@@ -50,9 +42,9 @@ createServer(toNodeListener(app)).listen(process.env.PORT || 3000)
 Example using <a href="https://github.com/unjs/listhen">listhen</a> for an elegant listener:
 
 ```ts
+import { useCompressionStream } from '@blokwise/h3-compression'
 import { createApp, eventHandler, toNodeListener } from 'h3'
 import { listen } from 'listhen'
-import { useCompressionStream } from 'h3-compression'
 
 const app = createApp({ onBeforeResponse: useCompressionStream }) // or { onBeforeResponse: useCompression }
 app.use(
@@ -63,24 +55,25 @@ app.use(
 listen(toNodeListener(app))
 ```
 
-## Nuxt 3
+## Nuxt 3/4
 
 If you want to use it in nuxt 3 you can define a nitro plugin.
 
 `server/plugins/compression.ts`
 ````ts
-import { useCompression } from 'h3-compression'
+import { useCompression } from '@blokwise/h3-compression'
 
 export default defineNitroPlugin((nitro) => {
   nitro.hooks.hook('render:response', async (response, { event }) => {
-    if (!response.headers?.['content-type'].startsWith('text/html'))
+    if (!response.headers?.['content-type'].startsWith('text/html')) {
       return
+    }
 
     await useCompression(event, response)
   })
 })
 ````
-> [!NOTE]  
+> [!NOTE]
 > `useCompressionStream` doesn't work right now in nitro. So you just can use `useCompression`
 
 ## Utilities
@@ -100,32 +93,12 @@ H3-compression has a concept of composable utilities that accept `event` (from `
 - `useDeflateCompressionStream(event, response)`
 - `useCompressionStream(event, response)`
 
-## Sponsors
-
-<p align="center">
-  <a href="https://pinia-orm.codedredd.de/sponsorkit/sponsors.png">
-    <img src='https://pinia-orm.codedredd.de/sponsorkit/sponsors.svg'/>
-  </a>
-</p>
-
 ## Releated Projects
 
-- [H3](https://github.com/unjs/h3)
+- [h3](https://github.com/unjs/h3)
+- [h3-compression](https://github.com/CodeDredd/h3-compression)
+- [h3-fast-compression](https://github.com/TimGonnet/h3-fast-compression)
 
-## License
+## Credits & License
 
-[MIT](./LICENSE) License © 2023-PRESENT [Gregor Becker](https://github.com/CodeDredd)
-
-
-<!-- Badges -->
-
-[npm-version-src]: https://img.shields.io/npm/v/h3-compression?style=flat&colorA=080f12&colorB=1fa669
-[npm-version-href]: https://npmjs.com/package/h3-compression
-[npm-downloads-src]: https://img.shields.io/npm/dm/h3-compression?style=flat&colorA=080f12&colorB=1fa669
-[npm-downloads-href]: https://npmjs.com/package/h3-compression
-[bundle-src]: https://img.shields.io/bundlephobia/minzip/h3-compression?style=flat&colorA=080f12&colorB=1fa669&label=minzip
-[bundle-href]: https://bundlephobia.com/result?p=h3-compression
-[license-src]: https://img.shields.io/github/license/CodeDredd/h3-compression.svg?style=flat&colorA=080f12&colorB=1fa669
-[license-href]: https://github.com/CodeDredd/h3-compression/blob/main/LICENSE
-[jsdocs-src]: https://img.shields.io/badge/jsdocs-reference-080f12?style=flat&colorA=080f12&colorB=1fa669
-[jsdocs-href]: https://www.jsdocs.io/package/h3-compression
+[MIT](./LICENSE) License © 2023-PRESENT [Julian Derungs](https://github.com/aerophobic)

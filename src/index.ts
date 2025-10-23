@@ -1,12 +1,18 @@
 export {
-  useGZipCompression,
-  useCompression,
   useBrotliCompression,
+  useCompression,
   useDeflateCompression,
+  useGZipCompression,
 } from './compression'
 
 export {
-  useGZipCompressionStream,
-  useDeflateCompressionStream,
   useCompressionStream,
+  useDeflateCompressionStream,
+  useGZipCompressionStream,
 } from './compressionStream'
+
+export {
+  compress,
+  compressStream,
+  getMostSuitableCompression,
+} from './helper'
