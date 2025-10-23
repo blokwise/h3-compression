@@ -1,8 +1,10 @@
 /**
  * Render response interface.
  */
-export interface RenderResponse {
-  body: string | unknown
+export interface RenderResponse<
+  T extends string | object | unknown = string | object | unknown,
+> {
+  body: T
   statusCode: number
   statusMessage: string
   headers: Record<string, string>
