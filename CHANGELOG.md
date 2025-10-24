@@ -1,6 +1,27 @@
 # Changelog
 
 
+## v0.4.1
+
+[compare changes](https://github.com/blokwise/h3-compression/compare/v0.4.0...v0.4.1)
+
+### 🚀 Enhancements
+
+- Export compress, compressStream and getMostSuitableCompression utilities ([e79a06d](https://github.com/blokwise/h3-compression/commit/e79a06d))
+- Enhance brotli compression performance and improve composability ([#1](https://github.com/blokwise/h3-compression/pull/1))
+
+### 💅 Refactors
+
+- Enhance performance of checking if compression should be applied and separate compression handlers from setting compressed response body ([29a6c6f](https://github.com/blokwise/h3-compression/commit/29a6c6f))
+
+### 🏡 Chore
+
+- Add @antfu/utils to deps ([7aed8cb](https://github.com/blokwise/h3-compression/commit/7aed8cb))
+
+### ❤️ Contributors
+
+- Julian Derungs ([@aerophobic](https://github.com/aerophobic))
+
 ## v0.4.0
 
 [compare changes](https://github.com/blokwise/h3-compression/compare/v0.3.3...v0.4.0)
