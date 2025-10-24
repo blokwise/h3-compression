@@ -44,4 +44,13 @@ describe('use compression', () => {
     expect(result.status).toEqual(200)
     expect(result.headers['content-encoding']).toEqual('br')
   })
+
+  it.skip('returns 200 OK with zstandard compression', async () => {
+    const result = await request
+      .get('/')
+      .set('Accept-Encoding', 'zstd')
+
+    expect(result.status).toEqual(200)
+    expect(result.headers['content-encoding']).toEqual('zstd')
+  })
 })

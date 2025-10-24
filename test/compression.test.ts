@@ -12,7 +12,7 @@ describe('use compression', () => {
     app = createApp({ debug: true, onBeforeResponse: useCompression })
     app.use('/', eventHandler({
       handler: () => {
-        return '<h1>Hello World</h1>'.repeat(100)
+        return '<h1>Hello World</h1>'.repeat(1000)
       },
     }))
     request = supertest(toNodeListener(app))
@@ -25,6 +25,7 @@ describe('use compression', () => {
 
     expect(result.status).toEqual(200)
     expect(result.headers['content-encoding']).toEqual('gzip')
+    expect(Number.parseInt(result.headers['content-length'])).toEqual(111)
   })
 
   it('returns 200 OK with deflate compression', async () => {
@@ -34,6 +35,7 @@ describe('use compression', () => {
 
     expect(result.status).toEqual(200)
     expect(result.headers['content-encoding']).toEqual('deflate')
+    expect(Number.parseInt(result.headers['content-length'])).toEqual(99)
   })
 
   it('returns 200 OK with brotli compression', async () => {
@@ -43,5 +45,16 @@ describe('use compression', () => {
 
     expect(result.status).toEqual(200)
     expect(result.headers['content-encoding']).toEqual('br')
+    expect(Number.parseInt(result.headers['content-length'])).toEqual(34)
+  })
+
+  it('returns 200 OK with zstandard compression', async () => {
+    const result = await request
+      .get('/')
+      .set('Accept-Encoding', 'zstd')
+
+    expect(result.status).toEqual(200)
+    expect(result.headers['content-encoding']).toEqual('zstd')
+    expect(Number.parseInt(result.headers['content-length'])).toEqual(37)
   })
 })
