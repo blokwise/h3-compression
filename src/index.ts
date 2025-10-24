@@ -3,6 +3,7 @@ export {
   useCompression,
   useDeflateCompression,
   useGZipCompression,
+  useZstdCompression,
 } from './compression'
 
 export {
@@ -12,7 +13,12 @@ export {
 } from './compressionStream'
 
 export {
+  EncodingMethods,
+  StreamEncodingMethods,
+} from './enums'
+
+export {
   compress,
   compressStream,
-  getMostSuitableCompression,
+  detectMostSuitableEncodingMethod,
 } from './helper'

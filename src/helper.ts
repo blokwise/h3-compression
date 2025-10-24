@@ -1,10 +1,11 @@
 import type { H3Event } from 'h3'
 import type { Buffer } from 'node:buffer'
-import type { BrotliCompressMode, CompressOptions, RenderResponse } from './types'
+import type { BrotliCompressMode, CompressOptions, EncodingMethod, RenderResponse, StreamEncodingMethod } from './types'
 import { promisify } from 'node:util'
-import zlib from 'node:zlib'
+import { brotliCompress, deflate as deflateCompress, gzip as gzipCompress, constants as zlibConstants, zstdCompress } from 'node:zlib'
 import { isObject, isString } from '@antfu/utils'
 import { getRequestHeader, getResponseHeader, setResponseHeader } from 'h3'
+import { EncodingMethods } from './enums'
 
 /**
  * Minimum of 1024 bytes are recommend to enable compression as smaller inputs might generate outputs which exceed input sizes.
@@ -12,27 +13,44 @@ import { getRequestHeader, getResponseHeader, setResponseHeader } from 'h3'
 const MINIMUM_COMPRESSION_INPUT_SIZE = 1024
 
 /**
- * Returns the most suitable compression method based on the request's `Accept-Encoding` header.
+ * `zlib` compression methods mapping.
+ */
+const zlib = {
+  constants: zlibConstants,
+  [EncodingMethods.Brotli]: brotliCompress,
+  [EncodingMethods.GZip]: gzipCompress,
+  [EncodingMethods.Deflate]: deflateCompress,
+  [EncodingMethods.Zstandard]: zstdCompress,
+} as const
+
+/**
+ * Returns the most suitable encoding method based on the request's `Accept-Encoding` header.
  *
  * @param event H3 event object.
+ * @param allowedMethods List of allowed encoding methods to consider. Defaults to all supported methods (`zstd`, `br`, `gzip`, `deflate`).
  *
- * @returns The most suitable compression method ('br', 'gzip', 'deflate') or `undefined` if none are supported.
+ * @returns The most suitable (allowed) encoding method (`zstd`, `br`, `gzip`, `deflate`) or `undefined` if none are supported.
+ *
+ * @since 0.4.0
  */
-export function getMostSuitableCompression(
+export function detectMostSuitableEncodingMethod<M extends EncodingMethod>(
   event: H3Event,
-) {
+  allowedMethods: M[] = Object.values(EncodingMethods) as M[],
+): M | undefined {
   const encoding = getRequestHeader(event, 'accept-encoding')
 
-  if (encoding?.includes('br')) {
-    return 'br'
-  }
+  // encoding methods in order of preference
+  const methods = [
+    EncodingMethods.Zstandard,
+    EncodingMethods.Brotli,
+    EncodingMethods.GZip,
+    EncodingMethods.Deflate,
+  ].filter(c => allowedMethods.includes(c as M)) as M[]
 
-  if (encoding?.includes('gzip')) {
-    return 'gzip'
-  }
-
-  if (encoding?.includes('deflate')) {
-    return 'deflate'
+  for (const method of methods) {
+    if (encoding?.includes(method)) {
+      return method
+    }
   }
 
   return undefined
@@ -41,7 +59,9 @@ export function getMostSuitableCompression(
 /**
  * Get Brotli compression options based on the specified mode.
  *
- * @param mode Brotli compression mode ('fast' or 'small').
+ * @param mode Brotli compression mode (`fast` or `small`).
+ *
+ * @since 0.4.0
  */
 function getBrotliCompressOptions(
   mode: BrotliCompressMode = 'fast',
@@ -56,7 +76,7 @@ function getBrotliCompressOptions(
     }
   }
 
-  // use default options
+  // return undefined to apply default options
   return undefined
 }
 
@@ -64,23 +84,27 @@ function getBrotliCompressOptions(
  * Check if the request accepts a specific encoding method.
  *
  * @param event H3 event object.
- * @param method Compression method ('gzip', 'deflate', 'br') to check.
+ * @param method Compression method (`gzip`, `deflate`, `br`, `zstd`) to check.
  *
  * @returns `true` if the request accepts the specified encoding method, otherwise `false`.
+ *
+ * @since 0.4.0
  */
 function acceptsEncodingMethod(
   event: H3Event,
-  method: 'gzip' | 'deflate' | 'br',
+  method: EncodingMethod,
 ) {
   return getRequestHeader(event, 'accept-encoding')?.includes(method)
 }
 
 /**
- * Check if the response already has a 'Content-Encoding' header.
+ * Check if a 'Content-Encoding' response header is present.
  *
  * @param event H3 event object.
  *
  * @returns `true` if the response has a 'Content-Encoding' header, otherwise `false`.
+ *
+ * @since 0.4.0
  */
 function hasContentEncoding(
   event: H3Event,
@@ -94,6 +118,8 @@ function hasContentEncoding(
  * @param body Response body to check.
  *
  * @returns `true` if the response body is compressible, otherwise `false`.
+ *
+ * @since 0.4.0
  */
 function isCompressableResponseBody<T extends string | object>(
   body: T | unknown,
@@ -107,6 +133,8 @@ function isCompressableResponseBody<T extends string | object>(
  * @param body Response body to get the size of.
  *
  * @returns Size of the response body or `-1` if size cannot be determined.
+ *
+ * @since 0.4.0
  */
 function getResponseBodySize<T extends string | object>(
   body: T | unknown,
@@ -128,6 +156,8 @@ function getResponseBodySize<T extends string | object>(
  * @param body Response body to convert.
  *
  * @returns Compressible response body.
+ *
+ * @since 0.4.0
  */
 function getCompressableResponseBody<T extends string | object>(
   body: T | unknown,
@@ -148,15 +178,17 @@ function getCompressableResponseBody<T extends string | object>(
  *
  * @param event H3 event object.
  * @param data Data to compress.
- * @param method Compression method ('gzip', 'deflate', 'br') to use.
+ * @param method Compression method (`gzip`, `deflate`, `br`, `zstd`) to use.
  * @param opts Compression options.
  *
  * @returns Compressed data or original data if compression is not applied.
+ *
+ * @since 0.4.0
  */
 export async function compress<T extends string | object | unknown>(
   event: H3Event,
   data: T,
-  method: 'gzip' | 'deflate' | 'br',
+  method: EncodingMethod,
   opts: CompressOptions = {},
 ): Promise<T | Buffer> {
   const shouldCompress = acceptsEncodingMethod(event, method)
@@ -172,10 +204,10 @@ export async function compress<T extends string | object | unknown>(
     // set 'Content-Encoding' header
     setResponseHeader(event, 'Content-Encoding', method)
 
-    // compress response body
+    // compress the data
     return await (
       method === 'br'
-        ? promisify(zlib.brotliCompress)(getCompressableResponseBody(data), getBrotliCompressOptions(opts.br))
+        ? promisify(zlib[method])(getCompressableResponseBody(data), getBrotliCompressOptions(opts.br))
         : promisify(zlib[method])(getCompressableResponseBody(data))
     ) as Buffer
   }
@@ -188,14 +220,16 @@ export async function compress<T extends string | object | unknown>(
  *
  * @param event H3 event object.
  * @param data Data to compress.
- * @param method Compression method ('gzip', 'deflate') to use.
+ * @param method Compression method (`gzip`, `deflate`) to use.
  *
  * @returns Compressed ReadableStream or original ReadableStream if compression is not applied.
+ *
+ * @since 0.4.0
  */
 export async function compressStream<T extends string | unknown>(
   event: H3Event,
   data: T,
-  method: 'gzip' | 'deflate',
+  method: StreamEncodingMethod,
 ): Promise<ReadableStream> {
   const stream = new Response(data as string).body as ReadableStream
   const shouldCompress = acceptsEncodingMethod(event, method)
@@ -219,6 +253,8 @@ export async function compressStream<T extends string | unknown>(
  *
  * @param response Response object with body prop.
  * @param compress Compression function to use.
+ *
+ * @since 0.4.0
  */
 export async function compressResponseBody<T extends string | unknown>(
   response: Partial<RenderResponse<T>>,
@@ -233,6 +269,8 @@ export async function compressResponseBody<T extends string | unknown>(
  *
  * @param response Response object with body prop.
  * @param compress Compression function to use.
+ *
+ * @since 0.4.0
  */
 export async function compressResponseBody<T extends string | object | unknown>(
   response: Partial<RenderResponse<T>>,
@@ -244,6 +282,8 @@ export async function compressResponseBody<T extends string | object | unknown>(
  *
  * @description
  * Applies compressed body to the response.
+ *
+ * @since 0.4.0
  */
 export async function compressResponseBody<C extends ((...args: any[]) => Promise<any>)>(
   ...args: [response: Partial<RenderResponse>, compress: C]

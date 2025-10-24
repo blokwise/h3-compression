@@ -1,12 +1,15 @@
 import type { H3Event } from 'h3'
-import type { RenderResponse } from './types'
-import { compressResponseBody, compressStream, getMostSuitableCompression } from './helper'
+import type { RenderResponse, StreamEncodingMethod } from './types'
+import { StreamEncodingMethods } from './enums'
+import { compressResponseBody, compressStream, detectMostSuitableEncodingMethod } from './helper'
 
 /**
  * Compresses the response (body) with [CompressionStream(gzip)]{@link https://developer.mozilla.org/en-US/docs/Web/API/CompressionStream}.
  *
  * @param event H3 event object.
  * @param response Response object with body prop.
+ *
+ * @since 0.3.0
  */
 export async function useGZipCompressionStream(
   event: H3Event,
@@ -20,6 +23,8 @@ export async function useGZipCompressionStream(
  *
  * @param event H3 event object.
  * @param response Response object with body prop.
+ *
+ * @since 0.3.0
  */
 export async function useDeflateCompressionStream(
   event: H3Event,
@@ -29,18 +34,20 @@ export async function useDeflateCompressionStream(
 }
 
 /**
- * Compresses the response (body) with [CompressionStream]{@link https://developer.mozilla.org/en-US/docs/Web/API/CompressionStream} by 'Accept-Encoding' header. Best is used first.
+ * Compresses the response (body) with [CompressionStream]{@link https://developer.mozilla.org/en-US/docs/Web/API/CompressionStream} by `Accept-Encoding` header. Best is used first.
  *
  * @param event H3 event object.
  * @param response Response object with body prop.
+ *
+ * @since 0.3.0
  */
 export async function useCompressionStream(
   event: H3Event,
   response: Partial<RenderResponse>,
 ) {
-  const compression = getMostSuitableCompression(event)
+  const method = detectMostSuitableEncodingMethod(event, Object.values(StreamEncodingMethods) as StreamEncodingMethod[])
 
-  if (compression && compression !== 'br') {
-    await compressResponseBody(response, response => compressStream(event, response.body, compression))
+  if (method) {
+    await compressResponseBody(response, response => compressStream(event, response.body, method))
   }
 }
