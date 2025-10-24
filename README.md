@@ -4,23 +4,23 @@
 
 ## Features
 
-✔️ &nbsp;**Zlib Compression:** You can use zlib compression (brotli, gzip and deflate)
+✔️ &nbsp;**Zlib Compression:** You can use zlib compression (zstandard, brotli, gzip, deflate)
 
 ✔️ &nbsp;**Stream Compression:** You can use native stream compressions (gzip, deflate)
 
-✔️ &nbsp;**Compression Detection:** It uses the best compression which is accepted
+✔️ &nbsp;**Compression Detection:** Uses the best compression which is accepted
 
-## Install
+## Getting started
 
 ```bash
-# Using npm
+# using npm
 npm install @blokwise/h3-compression
 
-# Using yarn
+# using yarn
 yarn add @blokwise/h3-compression
 
-# Using pnpm
-pnpm add @blokwise/h3-compression
+# using pnpm
+pnpm install @blokwise/h3-compression
 ```
 
 ## Usage
@@ -76,29 +76,36 @@ export default defineNitroPlugin((nitro) => {
 > [!NOTE]
 > `useCompressionStream` doesn't work right now in nitro. So you just can use `useCompression`
 
-## Utilities
+## API
 
 H3-compression has a concept of composable utilities that accept `event` (from `eventHandler((event) => {})`) as their first argument and `response` as their second.
 
-#### Zlib Compression
+### Compression
 
-- `useGZipCompression(event, response)`
-- `useDeflateCompression(event, response)`
-- `useBrotliCompression(event, response)`
-- `useCompression(event, response)`
+- `useGZipCompression(event: H3Event, response: { body: unknown }): Promise<void>`
+- `useDeflateCompression(event: H3Event, response: { body: unknown }): Promise<void>`
+- `useBrotliCompression(event: H3Event, response: { body: unknown }): Promise<void>`
+- `useZstdCompression(event: H3Event, response: { body: unknown }): Promise<void>`
+- `useCompression(event: H3Event, response: { body: unknown }): Promise<void>`
 
-#### Stream Compression
+### Stream Compression
 
-- `useGZipCompressionStream(event, response)`
-- `useDeflateCompressionStream(event, response)`
-- `useCompressionStream(event, response)`
+- `useGZipCompressionStream(event: H3Event, response: { body: unknown }): Promise<void>`
+- `useDeflateCompressionStream(event: H3Event, response: { body: unknown }): Promise<void>`
+- `useCompressionStream(event: H3Event, response: { body: unknown }): Promise<void>`
 
-## Releated Projects
+### Utilities
+
+- `compress(event: H3Event, data: unknown, method: 'gzip' | 'deflate' | 'br' | 'zstd'): Promise<Buffer<ArrayBufferLike> | unknown>`
+- `compressStream(event: H3Event, data: unknown, method: 'gzip' | 'deflate' | 'br' | 'zstd'): Promise<ReadableStream<any>>`
+- `detectMostSuitableEncodingMethod(event: H3Event, allowedMethods?: ('zstd' | 'br' | 'gzip' | 'deflate')[]): 'zstd' | 'br' | 'gzip' | 'deflate' | undefined`
+
+## Related Projects
 
 - [h3](https://github.com/unjs/h3)
 - [h3-compression](https://github.com/CodeDredd/h3-compression)
 - [h3-fast-compression](https://github.com/TimGonnet/h3-fast-compression)
 
-## Credits & License
+## License
 
 [MIT](./LICENSE) License © 2023-PRESENT [Julian Derungs](https://github.com/aerophobic)
