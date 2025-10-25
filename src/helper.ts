@@ -1,6 +1,6 @@
 import type { H3Event } from 'h3'
 import type { Buffer } from 'node:buffer'
-import type { BrotliCompressMode, CompressOptions, EncodingMethod, RenderResponse, StreamEncodingMethod } from './types'
+import type { AllowedEncodingMethods, BrotliCompressMode, CompressOptions, EncodingMethod, RenderResponse, StreamEncodingMethod } from './types'
 import { promisify } from 'node:util'
 import { isObject, isString } from '@antfu/utils'
 import { getRequestHeader, getResponseHeader, setResponseHeader } from 'h3'
@@ -13,19 +13,38 @@ import { zlib } from './zlib'
 const MINIMUM_COMPRESSION_INPUT_SIZE = 1024
 
 /**
+ * Get enabled encoding methods based on the provided options.
+ *
+ * @param methods Allowed encoding methods.
+ *
+ * @since 0.5.0
+ */
+export function getEncodingMethodsOptions(
+  methods: AllowedEncodingMethods = {},
+) {
+  return {
+    [EncodingMethods.Deflate]: true,
+    [EncodingMethods.GZip]: true,
+    [EncodingMethods.Brotli]: true,
+    [EncodingMethods.Zstandard]: false,
+    ...methods,
+  }
+}
+
+/**
  * Returns the most suitable encoding method based on the request's `Accept-Encoding` header.
  *
  * @param event H3 event object.
- * @param allowedMethods List of allowed encoding methods to consider. Defaults to all supported methods (`zstd`, `br`, `gzip`, `deflate`).
+ * @param options Options to configure encoding methods. By default `br`, `gzip`, `deflate` are enabled, `zstd` is disabled.
  *
  * @returns The most suitable (allowed) encoding method (`zstd`, `br`, `gzip`, `deflate`) or `undefined` if none are supported.
  *
  * @since 0.4.0
  */
-export function detectMostSuitableEncodingMethod<M extends EncodingMethod>(
+export function detectMostSuitableEncodingMethod(
   event: H3Event,
-  allowedMethods: M[] = Object.values(EncodingMethods) as M[],
-): M | undefined {
+  options: AllowedEncodingMethods = getEncodingMethodsOptions(),
+): EncodingMethod | undefined {
   const encoding = getRequestHeader(event, 'accept-encoding')
 
   // encoding methods in order of preference
@@ -34,7 +53,7 @@ export function detectMostSuitableEncodingMethod<M extends EncodingMethod>(
     EncodingMethods.Brotli,
     EncodingMethods.GZip,
     EncodingMethods.Deflate,
-  ].filter(c => allowedMethods.includes(c as M)) as M[]
+  ].filter(method => getEncodingMethodsOptions(options)[method])
 
   for (const method of methods) {
     if (encoding?.includes(method) && zlib.availableMethods.includes(method)) {
@@ -180,6 +199,10 @@ export async function compress<T extends string | object | unknown>(
   method: EncodingMethod,
   opts: CompressOptions = {},
 ): Promise<T | Buffer> {
+  if (!getEncodingMethodsOptions(opts.encodingMethods)[method]) {
+    return data
+  }
+
   const shouldCompress = acceptsEncodingMethod(event, method)
     // do not compress already compressed response
     // such as e.g. assets already compressed by nitro

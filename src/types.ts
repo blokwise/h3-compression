@@ -36,6 +36,41 @@ export interface RenderResponse<
 export type BrotliCompressMode = 'fast' | 'small'
 
 /**
+ * Allowed encoding methods.
+ *
+ * @since 0.5.0
+ */
+export interface AllowedEncodingMethods {
+  /**
+   * Whether to enable `deflate` compression.
+   *
+   * @default true
+   */
+  deflate?: boolean
+
+  /**
+   * Whether to enable `gzip` compression.
+   *
+   * @default true
+   */
+  gzip?: boolean
+
+  /**
+   * Whether to enable `br` compression.
+   *
+   * @default true
+   */
+  br?: boolean
+
+  /**
+   * Whether to enable `zstd` compression (if available).
+   *
+   * @default false
+   */
+  zstd?: boolean
+}
+
+/**
  * Compression options.
  *
  * @since 0.4.0
@@ -56,4 +91,11 @@ export interface CompressOptions {
    * @default 'fast'
    */
   br?: BrotliCompressMode
+
+  /**
+   * Allowed encoding methods.
+   *
+   * @since 0.5.0
+   */
+  encodingMethods?: AllowedEncodingMethods
 }

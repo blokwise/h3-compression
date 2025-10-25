@@ -84,7 +84,7 @@ export async function useCompression(
   response: Partial<RenderResponse>,
   opts: CompressOptions = {},
 ): Promise<void> {
-  const compression = detectMostSuitableEncodingMethod(event)
+  const compression = detectMostSuitableEncodingMethod(event, opts.encodingMethods)
 
   if (compression) {
     await compressResponseBody(response, response => compress(event, response.body, compression, opts))
