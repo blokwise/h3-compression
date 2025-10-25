@@ -2,26 +2,15 @@ import type { H3Event } from 'h3'
 import type { Buffer } from 'node:buffer'
 import type { BrotliCompressMode, CompressOptions, EncodingMethod, RenderResponse, StreamEncodingMethod } from './types'
 import { promisify } from 'node:util'
-import { brotliCompress, deflate as deflateCompress, gzip as gzipCompress, constants as zlibConstants, zstdCompress } from 'node:zlib'
 import { isObject, isString } from '@antfu/utils'
 import { getRequestHeader, getResponseHeader, setResponseHeader } from 'h3'
 import { EncodingMethods } from './enums'
+import { zlib } from './zlib'
 
 /**
  * Minimum of 1024 bytes are recommend to enable compression as smaller inputs might generate outputs which exceed input sizes.
  */
 const MINIMUM_COMPRESSION_INPUT_SIZE = 1024
-
-/**
- * `zlib` compression methods mapping.
- */
-const zlib = {
-  constants: zlibConstants,
-  [EncodingMethods.Brotli]: brotliCompress,
-  [EncodingMethods.GZip]: gzipCompress,
-  [EncodingMethods.Deflate]: deflateCompress,
-  [EncodingMethods.Zstandard]: zstdCompress,
-} as const
 
 /**
  * Returns the most suitable encoding method based on the request's `Accept-Encoding` header.
@@ -48,7 +37,7 @@ export function detectMostSuitableEncodingMethod<M extends EncodingMethod>(
   ].filter(c => allowedMethods.includes(c as M)) as M[]
 
   for (const method of methods) {
-    if (encoding?.includes(method)) {
+    if (encoding?.includes(method) && zlib.availableMethods.includes(method)) {
       return method
     }
   }
