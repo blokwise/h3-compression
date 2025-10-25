@@ -42,6 +42,13 @@ export type BrotliCompressMode = 'fast' | 'small'
  */
 export interface CompressOptions {
   /**
+   * Minimum size in bytes to apply compression on.
+   *
+   * @default 1024
+   */
+  threshold?: number
+
+  /**
    * Brotli compression mode.
    *
    * `'fast'` is most suitable for dynamic content whereas `'small'` results in a slightly better compression ratio (`9.08` vs `7.39`) but is `~90` times slower (`1240ms` vs `14ms`).

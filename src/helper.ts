@@ -187,7 +187,7 @@ export async function compress<T extends string | object | unknown>(
     // only compress if response body has compressable format
     && isCompressableResponseBody(data)
     // only compress if response body size exceeds minimum threshold
-    && getResponseBodySize(data) > MINIMUM_COMPRESSION_INPUT_SIZE
+    && getResponseBodySize(data) > (opts.threshold ?? MINIMUM_COMPRESSION_INPUT_SIZE)
 
   if (shouldCompress) {
     // set 'Content-Encoding' header
