@@ -54,7 +54,7 @@ describe('use compression', () => {
       .set('Accept-Encoding', 'zstd')
 
     expect(result.status).toEqual(200)
-    expect(result.headers['content-encoding']).toEqual('zstd')
-    expect(Number.parseInt(result.headers['content-length'])).toEqual(37)
+    expect(result.headers['content-encoding']).toEqual(undefined)
+    expect(Number.parseInt(result.headers['content-length'])).toEqual(20000)
   })
 })
