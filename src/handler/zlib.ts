@@ -1,6 +1,6 @@
-import type { EncodingMethod } from './types'
+import type { EncodingMethod } from '../types'
 import z from 'node:zlib'
-import { EncodingMethods } from './enums'
+import { EncodingMethods } from '../enums'
 
 export const zlib = (function () {
   const availableMethods = [
@@ -17,8 +17,8 @@ export const zlib = (function () {
   } as {
     constants: typeof z.constants
     availableMethods: EncodingMethod[]
-    zstdCompress?: typeof z.zstdCompress
-    brotliCompress: typeof z.brotliCompress
+    zstd?: typeof z.zstdCompress
+    br: typeof z.brotliCompress
     gzip: typeof z.gzip
     deflate: typeof z.deflate
   }

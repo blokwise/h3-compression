@@ -1,3 +1,4 @@
+import type { Buffer } from 'node:buffer'
 import type { EncodingMethods, StreamEncodingMethods } from './enums'
 
 /**
@@ -29,13 +30,6 @@ export interface RenderResponse<
 }
 
 /**
- * Brotli compression mode.
- *
- * @since 0.4.0
- */
-export type BrotliCompressMode = 'fast' | 'small'
-
-/**
  * Allowed encoding methods.
  *
  * @since 0.5.0
@@ -63,9 +57,9 @@ export interface AllowedEncodingMethods {
   br?: boolean
 
   /**
-   * Whether to enable `zstd` compression (if available).
+   * Whether to enable `zstd` compression (if supported by runtime).
    *
-   * @default false
+   * @default true
    */
   zstd?: boolean
 }
@@ -84,18 +78,19 @@ export interface CompressOptions {
   threshold?: number
 
   /**
-   * Brotli compression mode.
-   *
-   * `'fast'` is most suitable for dynamic content whereas `'small'` results in a slightly better compression ratio (`9.08` vs `7.39`) but is `~90` times slower (`1240ms` vs `14ms`).
-   *
-   * @default 'fast'
-   */
-  br?: BrotliCompressMode
-
-  /**
    * Allowed encoding methods.
    *
    * @since 0.5.0
    */
   encodingMethods?: AllowedEncodingMethods
 }
+
+/**
+ * Compression handler type.
+ *
+ * @since 0.5.0
+ */
+export type CompressionHandler = ((
+  input: Buffer<ArrayBuffer>,
+  cb: (error: Error | null, output: Buffer) => void,
+) => void)

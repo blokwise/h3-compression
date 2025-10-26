@@ -1,5 +1,6 @@
 import type { H3Event } from 'h3'
-import type { RenderResponse, StreamEncodingMethod } from './types'
+import type { CompressOptions, RenderResponse, StreamEncodingMethod } from './types'
+import { objectPick } from '@antfu/utils'
 import { StreamEncodingMethods } from './enums'
 import { compressResponseBody, compressStream, detectMostSuitableEncodingMethod } from './helper'
 
@@ -38,14 +39,20 @@ export async function useDeflateCompressionStream(
  *
  * @param event H3 event object.
  * @param response Response object with body prop.
+ * @param opts Compression options.
  *
  * @since 0.3.0
  */
 export async function useCompressionStream(
   event: H3Event,
   response: Partial<RenderResponse>,
+  opts: CompressOptions = {},
 ) {
-  const method = detectMostSuitableEncodingMethod(event, Object.values(StreamEncodingMethods) as StreamEncodingMethod[])
+  const method = detectMostSuitableEncodingMethod(event, {
+    ...objectPick(opts.encodingMethods ?? {}, [StreamEncodingMethods.GZip, StreamEncodingMethods.Deflate]),
+    br: false,
+    zstd: false,
+  }) as StreamEncodingMethod | undefined
 
   if (method) {
     await compressResponseBody(response, response => compressStream(event, response.body, method))

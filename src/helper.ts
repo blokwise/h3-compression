@@ -1,11 +1,11 @@
 import type { H3Event } from 'h3'
-import type { Buffer } from 'node:buffer'
-import type { AllowedEncodingMethods, BrotliCompressMode, CompressOptions, EncodingMethod, RenderResponse, StreamEncodingMethod } from './types'
-import { promisify } from 'node:util'
+import type { AllowedEncodingMethods, CompressOptions, EncodingMethod, RenderResponse, StreamEncodingMethod } from './types'
+import { Buffer } from 'node:buffer'
 import { isObject, isString } from '@antfu/utils'
 import { getRequestHeader, getResponseHeader, setResponseHeader } from 'h3'
 import { EncodingMethods } from './enums'
-import { zlib } from './zlib'
+import { createAsyncCompressionHandler, getCompressionHandler } from './handler'
+import { zlib } from './handler/zlib'
 
 /**
  * Minimum of 1024 bytes are recommend to enable compression as smaller inputs might generate outputs which exceed input sizes.
@@ -26,7 +26,7 @@ export function getEncodingMethodsOptions(
     [EncodingMethods.Deflate]: true,
     [EncodingMethods.GZip]: true,
     [EncodingMethods.Brotli]: true,
-    [EncodingMethods.Zstandard]: false,
+    [EncodingMethods.Zstandard]: true,
     ...methods,
   }
 }
@@ -35,7 +35,7 @@ export function getEncodingMethodsOptions(
  * Returns the most suitable encoding method based on the request's `Accept-Encoding` header.
  *
  * @param event H3 event object.
- * @param options Options to configure encoding methods. By default `br`, `gzip`, `deflate` are enabled, `zstd` is disabled.
+ * @param options Options to configure encoding methods. By default all methods (`zstd`, `br`, `gzip`, `deflate`) are enabled.
  *
  * @returns The most suitable (allowed) encoding method (`zstd`, `br`, `gzip`, `deflate`) or `undefined` if none are supported.
  *
@@ -61,30 +61,6 @@ export function detectMostSuitableEncodingMethod(
     }
   }
 
-  return undefined
-}
-
-/**
- * Get Brotli compression options based on the specified mode.
- *
- * @param mode Brotli compression mode (`fast` or `small`).
- *
- * @since 0.4.0
- */
-function getBrotliCompressOptions(
-  mode: BrotliCompressMode = 'fast',
-) {
-  if (mode === 'fast') {
-    return {
-      params: {
-        [zlib.constants.BROTLI_PARAM_MODE]: zlib.constants.BROTLI_MODE_TEXT,
-        // 4 is generally more appropriate for dynamic content, faster than gzip and better compression ratio
-        [zlib.constants.BROTLI_PARAM_QUALITY]: 4,
-      },
-    }
-  }
-
-  // return undefined to apply default options
   return undefined
 }
 
@@ -171,37 +147,14 @@ function getCompressableResponseBody<T extends string | object>(
   body: T | unknown,
 ) {
   if (isString(body)) {
-    return body
+    return Buffer.from(body)
   }
 
   if (isObject(body)) {
-    return JSON.stringify(body)
+    return Buffer.from(JSON.stringify(body))
   }
 
   throw new Error('Response body is not compressable')
-}
-
-/**
- * Create a compressed buffer using the specified method.
- *
- * @param data Data to compress.
- * @param method Compression method (`gzip`, `deflate`, `br`) to use.
- * @param opts Compression options.
- *
- * @returns Compressed buffer.
- *
- * @since 0.5.0
- */
-export async function createCompressedBuffer<T extends string | object | unknown>(
-  data: T,
-  method: EncodingMethod,
-  opts: CompressOptions = {},
-): Promise<Buffer> {
-  return await (
-    method === 'br'
-      ? promisify(zlib[method])(getCompressableResponseBody(data), getBrotliCompressOptions(opts.br))
-      : promisify(zlib[method])(getCompressableResponseBody(data))
-  ) as Buffer
 }
 
 /**
@@ -238,9 +191,15 @@ export async function compress<T extends string | object | unknown>(
   if (shouldCompress) {
     // set 'Content-Encoding' header
     setResponseHeader(event, 'Content-Encoding', method)
+    setResponseHeader(event, 'Vary', 'Accept-Encoding')
 
     // compress the data
-    return await createCompressedBuffer(data, method, opts)
+    const handler = createAsyncCompressionHandler(getCompressionHandler(method, {
+      contentType: getResponseHeader(event, 'content-type'),
+      size: getResponseBodySize(data),
+    }))
+
+    return await handler(getCompressableResponseBody(data))
   }
 
   return data
@@ -268,6 +227,7 @@ export async function compressStream<T extends string | unknown>(
   if (shouldCompress) {
     // set 'Content-Encoding' header
     setResponseHeader(event, 'Content-Encoding', method)
+    setResponseHeader(event, 'Vary', 'Accept-Encoding')
 
     // compress stream
     return stream.pipeThrough(new CompressionStream(method))
