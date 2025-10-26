@@ -25,7 +25,7 @@ describe('use compression', () => {
 
     expect(result.status).toEqual(200)
     expect(result.headers['content-encoding']).toEqual('gzip')
-    expect(Number.parseInt(result.headers['content-length'])).toEqual(111)
+    expect(Number.parseInt(result.headers['content-length'])).toEqual(107)
   })
 
   it('returns 200 OK with deflate compression', async () => {
@@ -54,7 +54,7 @@ describe('use compression', () => {
       .set('Accept-Encoding', 'zstd')
 
     expect(result.status).toEqual(200)
-    expect(result.headers['content-encoding']).toEqual(undefined)
-    expect(Number.parseInt(result.headers['content-length'])).toEqual(20000)
+    expect(result.headers['content-encoding']).toEqual('zstd')
+    expect(Number.parseInt(result.headers['content-length'])).toEqual(47)
   })
 })
