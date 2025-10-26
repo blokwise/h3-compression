@@ -1,6 +1,40 @@
 # Changelog
 
 
+## v0.5.0
+
+[compare changes](https://github.com/blokwise/h3-compression/compare/v0.4.1...v0.5.0)
+
+### 🚀 Enhancements
+
+- Add zstd compression ([552b73b](https://github.com/blokwise/h3-compression/commit/552b73b))
+- Ensure zstd is only used when node version includes the feature ([870a9ab](https://github.com/blokwise/h3-compression/commit/870a9ab))
+- Enable specifying min size threshold for compression ([08465de](https://github.com/blokwise/h3-compression/commit/08465de))
+- Disable zstd by default and introduce encoding methods options ([15d6f1a](https://github.com/blokwise/h3-compression/commit/15d6f1a))
+- Add async and stream executor and enable zstd by default ([046c6f7](https://github.com/blokwise/h3-compression/commit/046c6f7))
+
+### 💅 Refactors
+
+- Extract compressed buffer creation into utility ([1c0c996](https://github.com/blokwise/h3-compression/commit/1c0c996))
+
+### 📖 Documentation
+
+- Update readme ([768cc03](https://github.com/blokwise/h3-compression/commit/768cc03))
+
+### 🏡 Chore
+
+- Recreate lockfile ([1085855](https://github.com/blokwise/h3-compression/commit/1085855))
+
+### ✅ Tests
+
+- Add tests for zstd compression ([2d52ee5](https://github.com/blokwise/h3-compression/commit/2d52ee5))
+- Update tests ([bf13409](https://github.com/blokwise/h3-compression/commit/bf13409))
+- Update tests ([2dc7bf6](https://github.com/blokwise/h3-compression/commit/2dc7bf6))
+
+### ❤️ Contributors
+
+- Julian Derungs ([@aerophobic](https://github.com/aerophobic))
+
 ## v0.4.1
 
 [compare changes](https://github.com/blokwise/h3-compression/compare/v0.4.0...v0.4.1)
