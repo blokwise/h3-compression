@@ -182,6 +182,29 @@ function getCompressableResponseBody<T extends string | object>(
 }
 
 /**
+ * Create a compressed buffer using the specified method.
+ *
+ * @param data Data to compress.
+ * @param method Compression method (`gzip`, `deflate`, `br`) to use.
+ * @param opts Compression options.
+ *
+ * @returns Compressed buffer.
+ *
+ * @since 0.5.0
+ */
+export async function createCompressedBuffer<T extends string | object | unknown>(
+  data: T,
+  method: EncodingMethod,
+  opts: CompressOptions = {},
+): Promise<Buffer> {
+  return await (
+    method === 'br'
+      ? promisify(zlib[method])(getCompressableResponseBody(data), getBrotliCompressOptions(opts.br))
+      : promisify(zlib[method])(getCompressableResponseBody(data))
+  ) as Buffer
+}
+
+/**
  * Compress the response using the specified method.
  *
  * @param event H3 event object.
@@ -217,11 +240,7 @@ export async function compress<T extends string | object | unknown>(
     setResponseHeader(event, 'Content-Encoding', method)
 
     // compress the data
-    return await (
-      method === 'br'
-        ? promisify(zlib[method])(getCompressableResponseBody(data), getBrotliCompressOptions(opts.br))
-        : promisify(zlib[method])(getCompressableResponseBody(data))
-    ) as Buffer
+    return await createCompressedBuffer(data, method, opts)
   }
 
   return data
