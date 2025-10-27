@@ -1,24 +1,21 @@
 export {
+  compress,
+  compressStream,
+  detectMostSuitableEncodingMethod,
+  EncodingMethods,
+  StreamEncodingMethods,
+} from './core'
+
+export {
   useBrotliCompression,
   useCompression,
   useDeflateCompression,
   useGZipCompression,
   useZstdCompression,
-} from './compression'
+} from './useCompression'
 
 export {
   useCompressionStream,
   useDeflateCompressionStream,
   useGZipCompressionStream,
-} from './compressionStream'
-
-export {
-  EncodingMethods,
-  StreamEncodingMethods,
-} from './enums'
-
-export {
-  compress,
-  compressStream,
-  detectMostSuitableEncodingMethod,
-} from './helper'
+} from './useCompressionStream'

@@ -1,8 +1,7 @@
 import type { H3Event } from 'h3'
-import type { CompressOptions, RenderResponse, StreamEncodingMethod } from './types'
+import type { CompressOptions, RenderResponse, StreamEncodingMethod } from './core'
 import { objectPick } from '@antfu/utils'
-import { StreamEncodingMethods } from './enums'
-import { compressResponseBody, compressStream, detectMostSuitableEncodingMethod } from './helper'
+import { compressResponseBody, compressStream, detectMostSuitableEncodingMethod, StreamEncodingMethods } from './core'
 
 /**
  * Compresses the response (body) with [CompressionStream(gzip)]{@link https://developer.mozilla.org/en-US/docs/Web/API/CompressionStream}.

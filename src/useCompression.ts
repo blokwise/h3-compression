@@ -1,6 +1,6 @@
 import type { H3Event } from 'h3'
-import type { CompressOptions, RenderResponse } from './types'
-import { compress, compressResponseBody, detectMostSuitableEncodingMethod } from './helper'
+import type { CompressOptions, RenderResponse } from './core'
+import { compress, compressResponseBody, detectMostSuitableEncodingMethod } from './core'
 
 /**
  * Compresses the response (body) with [zlib.gzip]{@link https://www.w3schools.com/nodejs/ref_zlib.asp}.
