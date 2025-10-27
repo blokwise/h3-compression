@@ -27,6 +27,10 @@
     ".": {
       "types": "./dist/index.d.mts",
       "import": "./dist/index.mjs"
+    },
+    "./handler": {
+      "types": "./dist/handler.d.mts",
+      "import": "./dist/handler.mjs"
     }
   },
   "main": "./dist/index.mjs",
@@ -36,6 +40,9 @@
     "*": {
       ".": [
         "./dist/index.d.mts"
+      ],
+      "handler": [
+        "./dist/handler.d.mts"
       ]
     }
   },
