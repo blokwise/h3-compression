@@ -1059,8 +1059,8 @@ packages:
   '@rolldown/pluginutils@1.0.0-beta.29':
     resolution: {integrity: sha512-NIJgOsMjbxAXvoGq/X0gD7VPMQ8j9g0BiDaNjVNVjvl+iKXxL3Jre0v31RmBYeLEmkbj2s02v8vFTbUXi5XS2Q==}
 
-  '@rolldown/pluginutils@1.0.0-beta.44':
-    resolution: {integrity: sha512-g6eW7Zwnr2c5RADIoqziHoVs6b3W5QTQ4+qbpfjbkMJ9x+8Og211VW/oot2dj9dVwaK/UyC6Yo+02gV+wWQVNg==}
+  '@rolldown/pluginutils@1.0.0-beta.45':
+    resolution: {integrity: sha512-Le9ulGCrD8ggInzWw/k2J8QcbPz7eGIOWqfJ2L+1R0Opm7n6J37s2hiDWlh6LJN0Lk9L5sUzMvRHKW7UxBZsQA==}
 
   '@rollup/plugin-alias@5.1.1':
     resolution: {integrity: sha512-PR9zDb+rOzkRb2VD+EuKB7UC41vU5DIwZ5qqCpk0KJudcWAyi8rvYOhS7+L5aZCspw1stTViLgN5v6FF1p5cgQ==}
@@ -1405,8 +1405,8 @@ packages:
       '@vitest/browser':
         optional: true
 
-  '@vitest/eslint-plugin@1.3.25':
-    resolution: {integrity: sha512-7qM/FrA2VyUmrorP0TQ/Oqhn6wsAcktg6euBn0XmpgF0yT2mDxjziu2QLy86i2mOJ41Wtt55z6aUWo+bfmyAeg==}
+  '@vitest/eslint-plugin@1.3.26':
+    resolution: {integrity: sha512-oP+Vyqgp+kLuMagG0tRkcT7e2tUoE+XWgti1OFxqdTpmMlSZJ6BWSC3rv8vzhtDXReXNyAJI1eojuc7N0QqbNQ==}
     engines: {node: '>=18'}
     peerDependencies:
       eslint: '>=8.57.0'
@@ -2118,8 +2118,8 @@ packages:
   ee-first@1.1.1:
     resolution: {integrity: sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==}
 
-  electron-to-chromium@1.5.240:
-    resolution: {integrity: sha512-OBwbZjWgrCOH+g6uJsA2/7Twpas2OlepS9uvByJjR2datRDuKGYeD+nP8lBBks2qnB7bGJNHDUx7c/YLaT3QMQ==}
+  electron-to-chromium@1.5.241:
+    resolution: {integrity: sha512-ILMvKX/ZV5WIJzzdtuHg8xquk2y0BOGlFOxBVwTpbiXqWIH0hamG45ddU4R3PQ0gYu+xgo0vdHXHli9sHIGb4w==}
 
   emoji-regex@10.6.0:
     resolution: {integrity: sha512-toUI84YS5YmxW219erniWD0CIVOo46xGKColeNQRgOzDorgBi1v4D71/OFzgD9GO2UGKIv1C3Sp8DAn0+j5w7A==}
@@ -3392,8 +3392,8 @@ packages:
   ohash@2.0.11:
     resolution: {integrity: sha512-RdR9FQrFwNBNXAr4GixM8YaRZRJ5PUWbKYbE5eOsrwAjJW0q2REGcf79oYPsLyskQCZG1PLN+S/K1V00joZAoQ==}
 
-  on-change@6.0.0:
-    resolution: {integrity: sha512-J7kocOS+ZNyjmW6tUUTtA7jLt8GjQlrOdz9z3yLNTvdsswO+b5lYSdMVzDczWnooyFAkkQiKyap5g/Zba+cFRA==}
+  on-change@6.0.1:
+    resolution: {integrity: sha512-P7o0hkMahOhjb1niG28vLNAXsJrRcfpJvYWcTmPt/Tf4xedcF2PA1E9++N1tufY8/vIsaiJgHhjQp53hJCe+zw==}
     engines: {node: '>=20'}
 
   on-finished@2.4.1:
@@ -4748,7 +4748,7 @@ snapshots:
       '@stylistic/eslint-plugin': 5.5.0(eslint@9.38.0(jiti@2.6.1))
       '@typescript-eslint/eslint-plugin': 8.46.2(@typescript-eslint/parser@8.46.2(eslint@9.38.0(jiti@2.6.1))(typescript@5.9.3))(eslint@9.38.0(jiti@2.6.1))(typescript@5.9.3)
       '@typescript-eslint/parser': 8.46.2(eslint@9.38.0(jiti@2.6.1))(typescript@5.9.3)
-      '@vitest/eslint-plugin': 1.3.25(eslint@9.38.0(jiti@2.6.1))(typescript@5.9.3)(vitest@3.2.4(@types/debug@4.1.12)(@types/node@24.9.1)(jiti@2.6.1)(terser@5.44.0)(yaml@2.8.1))
+      '@vitest/eslint-plugin': 1.3.26(eslint@9.38.0(jiti@2.6.1))(typescript@5.9.3)(vitest@3.2.4(@types/debug@4.1.12)(@types/node@24.9.1)(jiti@2.6.1)(terser@5.44.0)(yaml@2.8.1))
       ansis: 4.2.0
       cac: 6.7.14
       eslint: 9.38.0(jiti@2.6.1)
@@ -5855,7 +5855,7 @@ snapshots:
 
   '@rolldown/pluginutils@1.0.0-beta.29': {}
 
-  '@rolldown/pluginutils@1.0.0-beta.44': {}
+  '@rolldown/pluginutils@1.0.0-beta.45': {}
 
   '@rollup/plugin-alias@5.1.1(rollup@4.52.5)':
     optionalDependencies:
@@ -6181,7 +6181,7 @@ snapshots:
       '@babel/core': 7.28.5
       '@babel/plugin-syntax-typescript': 7.27.1(@babel/core@7.28.5)
       '@babel/plugin-transform-typescript': 7.28.5(@babel/core@7.28.5)
-      '@rolldown/pluginutils': 1.0.0-beta.44
+      '@rolldown/pluginutils': 1.0.0-beta.45
       '@vue/babel-plugin-jsx': 1.5.0(@babel/core@7.28.5)
       vite: 7.1.12(@types/node@24.9.1)(jiti@2.6.1)(terser@5.44.0)(yaml@2.8.1)
       vue: 3.5.22(typescript@5.9.3)
@@ -6213,7 +6213,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@vitest/eslint-plugin@1.3.25(eslint@9.38.0(jiti@2.6.1))(typescript@5.9.3)(vitest@3.2.4(@types/debug@4.1.12)(@types/node@24.9.1)(jiti@2.6.1)(terser@5.44.0)(yaml@2.8.1))':
+  '@vitest/eslint-plugin@1.3.26(eslint@9.38.0(jiti@2.6.1))(typescript@5.9.3)(vitest@3.2.4(@types/debug@4.1.12)(@types/node@24.9.1)(jiti@2.6.1)(terser@5.44.0)(yaml@2.8.1))':
     dependencies:
       '@typescript-eslint/scope-manager': 8.46.2
       '@typescript-eslint/utils': 8.46.2(eslint@9.38.0(jiti@2.6.1))(typescript@5.9.3)
@@ -6551,7 +6551,7 @@ snapshots:
     dependencies:
       baseline-browser-mapping: 2.8.20
       caniuse-lite: 1.0.30001751
-      electron-to-chromium: 1.5.240
+      electron-to-chromium: 1.5.241
       node-releases: 2.0.26
       update-browserslist-db: 1.1.4(browserslist@4.27.0)
 
@@ -6956,7 +6956,7 @@ snapshots:
 
   ee-first@1.1.1: {}
 
-  electron-to-chromium@1.5.240: {}
+  electron-to-chromium@1.5.241: {}
 
   emoji-regex@10.6.0: {}
 
@@ -8539,7 +8539,7 @@ snapshots:
       nypm: 0.6.2
       ofetch: 1.4.1
       ohash: 2.0.11
-      on-change: 6.0.0
+      on-change: 6.0.1
       oxc-minify: 0.95.0
       oxc-parser: 0.95.0
       oxc-transform: 0.95.0
@@ -8645,7 +8645,7 @@ snapshots:
 
   ohash@2.0.11: {}
 
-  on-change@6.0.0: {}
+  on-change@6.0.1: {}
 
   on-finished@2.4.1:
     dependencies:
