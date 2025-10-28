@@ -62,7 +62,8 @@
     "h3": "^1.6.0 || ^2.0.0"
   },
   "dependencies": {
-    "@antfu/utils": "^9.3.0"
+    "@antfu/utils": "^9.3.0",
+    "defu": "^6.1.4"
   },
   "devDependencies": {
     "@antfu/eslint-config": "6.0.0",

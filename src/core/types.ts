@@ -1,4 +1,5 @@
 import type { Buffer } from 'node:buffer'
+import type { BrotliOptions, ZlibOptions, ZstdOptions } from 'node:zlib'
 import type { EncodingMethods, StreamEncodingMethods } from './enums'
 
 /**
@@ -65,6 +66,36 @@ export interface AllowedEncodingMethods {
 }
 
 /**
+ * Encoding options type.
+ *
+ * @template M Encoding method.
+ *
+ * @since 0.5.3
+ */
+export type EncodingOptions<
+  M extends EncodingMethod,
+> = M extends typeof EncodingMethods.Zstandard
+  ? ZstdOptions
+  : M extends typeof EncodingMethods.Brotli
+    ? BrotliOptions
+    : ZlibOptions
+
+/**
+ * Decoding options type.
+ *
+ * @template M Encoding method.
+ *
+ * @since 0.5.3
+ */
+export type DecodingOptions<
+  M extends EncodingMethod,
+> = M extends typeof EncodingMethods.Zstandard
+  ? ZstdOptions
+  : M extends typeof EncodingMethods.Brotli
+    ? BrotliOptions
+    : ZlibOptions
+
+/**
  * Compression options.
  *
  * @since 0.4.0
@@ -86,11 +117,38 @@ export interface CompressOptions {
 }
 
 /**
- * Compression handler type.
+ * Handler type.
+ *
+ * @param O Options type.
  *
  * @since 0.5.0
  */
-export type CompressionHandler = ((
+export type Handler<
+  O extends EncodingOptions<any> | DecodingOptions<any>,
+> = ((
   input: Buffer<ArrayBuffer>,
+  opts: O,
   cb: (error: Error | null, output: Buffer) => void,
 ) => void)
+
+/**
+ * Encoding handler type.
+ *
+ * @param M Encoding method.
+ *
+ * @since 0.5.3
+ */
+export type EncodingHandler<
+  M extends EncodingMethod,
+> = Handler<EncodingOptions<M>>
+
+/**
+ * Decoding handler type.
+ *
+ * @param M Encoding method.
+ *
+ * @since 0.5.3
+ */
+export type DecodingHandler<
+  M extends EncodingMethod,
+> = Handler<DecodingOptions<M>>

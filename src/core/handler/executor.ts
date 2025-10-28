@@ -1,12 +1,21 @@
 import type { H3Event } from 'h3'
-import type { CompressionHandler } from '../types'
+import type { DecodingOptions, EncodingOptions, Handler } from '../types'
 import { Buffer } from 'node:buffer'
 import { removeResponseHeader, setResponseHeader } from 'h3'
 
-export function createStreamCompressionHandler(
-  handler: CompressionHandler,
+/**
+ * Convert a callback-based handler to a `Readable`-based one.
+ *
+ * @param handler Handler to convert.
+ *
+ * @since 0.5.0
+ */
+export function asStream<
+  O extends EncodingOptions<any> | DecodingOptions<any>,
+>(
+  handler: Handler<O>,
 ) {
-  return (event: H3Event) => {
+  return (event: H3Event, opts: O = {} as O) => {
     const res = event.node.res
     const chunks: Buffer[] = []
 
@@ -66,15 +75,24 @@ export function createStreamCompressionHandler(
         _end(output, ...args)
       }
 
-      handler(input, cb)
+      handler(input, opts, cb)
     }
   }
 }
 
-export function createAsyncCompressionHandler(
-  handler: CompressionHandler,
+/**
+ * Convert a callback-based handler to an `Promise`-based one.
+ *
+ * @param handler Handler to convert.
+ *
+ * @since 0.5.0
+ */
+export function toAsync<
+  O extends EncodingOptions<any> | DecodingOptions<any>,
+>(
+  handler: Handler<O>,
 ) {
-  return async (input: Buffer<ArrayBuffer>): Promise<Buffer<ArrayBufferLike>> => await new Promise((
+  return async (input: Buffer<ArrayBuffer>, opts: O = {} as O): Promise<Buffer<ArrayBufferLike>> => await new Promise((
     resolve,
     reject,
   ) => {
@@ -87,6 +105,6 @@ export function createAsyncCompressionHandler(
         ? reject(error)
         : resolve(output)
 
-    handler(input, cb)
+    handler(input, opts, cb)
   })
 }

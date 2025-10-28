@@ -3,7 +3,7 @@ import type { Buffer } from 'node:buffer'
 import type { AllowedEncodingMethods, CompressOptions, EncodingMethod, RenderResponse, StreamEncodingMethod } from './types'
 import { getRequestHeader, getResponseHeader, setResponseHeader } from 'h3'
 import { EncodingMethods } from './enums'
-import { createAsyncCompressionHandler, getCompressionHandler } from './handler'
+import { toAsync, useHandler } from './handler'
 import { zlib } from './handler/zlib'
 import { getCompressible, getSize, isCompressibleFormat } from './utils'
 
@@ -133,10 +133,10 @@ export async function compress<T extends string | object | unknown>(
     setResponseHeader(event, 'Vary', 'Accept-Encoding')
 
     // compress the data
-    const handler = createAsyncCompressionHandler(getCompressionHandler(method, {
+    const handler = toAsync(useHandler(method, {
       contentType: getResponseHeader(event, 'content-type'),
       size: getSize(data),
-    }))
+    }).encode)
 
     return await handler(getCompressible(data))
   }

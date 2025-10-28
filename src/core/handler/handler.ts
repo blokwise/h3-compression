@@ -1,66 +1,84 @@
 import type { Buffer } from 'node:buffer'
 import type { CompressCallback } from 'node:zlib'
-import type { CompressionHandler, EncodingMethod } from '../types'
+import type { DecodingHandler, DecodingOptions, EncodingHandler, EncodingMethod, EncodingOptions } from '../types'
+import { defu } from 'defu'
 import { isTextMime } from '../utils'
 import { zlib } from './zlib'
 
 /**
- * Get compression handler based on the encoding method.
+ * Use encoding/decoding handler based on the encoding method.
  *
  * @param method Encoding method.
- * @param opts Options to configure handler compression options with.
- * @param opts.contentType Content type of the data to be compressed. This affects compression options if encoding is set to 'br'. If omitted, `br` options are set to generic mode.
- * @param opts.size Size of the data to be compressed. This affects compression options if encoding is set to 'br' and are included in the compressed data to hint decompression size.
- *
- * @returns Compression handler function.
+ * @param opts Options to configure handler encoding/decoding options with.
+ * @param opts.contentType Content type of the data to be processed. This only affects encoding options for 'br'. If omitted, `br` encoding options are set to generic mode.
+ * @param opts.size Size of the unencoded data. This affects encoding options for 'br'. A hint to the unencoded size will be included in the encoded data to improve decoding.
  *
  * @since 0.5.0
  */
-export function getCompressionHandler(
-  method: EncodingMethod,
+export function useHandler<
+  M extends EncodingMethod,
+  E extends EncodingOptions<M>,
+  D extends DecodingOptions<M>,
+>(
+  method: M,
   opts: {
     contentType?: string | number | string[] | undefined
     size?: number
   } = {},
-): CompressionHandler {
+) {
   const commonOptions = {
     flush: zlib.constants.Z_SYNC_FLUSH,
     finishFlush: zlib.constants.Z_SYNC_FLUSH,
   }
-
-  const compressionOptions = {
-    zstd: {
-      ...commonOptions,
-    },
+  const encodingOptions = {
     br: {
-      ...commonOptions,
       params: {
         [zlib.constants.BROTLI_PARAM_MODE]: !!opts.contentType && isTextMime(String(opts.contentType || ''))
           ? zlib.constants.BROTLI_MODE_TEXT
           : zlib.constants.BROTLI_MODE_GENERIC,
-        // [zlib.constants.BROTLI_PARAM_QUALITY]: zlib.constants.BROTLI_MAX_QUALITY,
         // 4 is generally more appropriate for dynamic content, faster than gzip and better compression ratio
         [zlib.constants.BROTLI_PARAM_QUALITY]: 4,
+        // to configure max compression ratio use corresponding constant
+        // [zlib.constants.BROTLI_PARAM_QUALITY]: zlib.constants.BROTLI_MAX_QUALITY,
         ...(opts.size ? { [zlib.constants.BROTLI_PARAM_SIZE_HINT]: opts.size } : {}),
       },
     },
     gzip: {
-      ...commonOptions,
       level: zlib.constants.Z_BEST_COMPRESSION,
     },
-    deflate: {
-      ...commonOptions,
-    },
+  }
+  const decodingOptions = {}
+
+  const createOptions = <O extends E | D>(...opts: O[]) => {
+    return defu({}, ...[...opts, commonOptions])
   }
 
   /**
-   * Compression handler.
+   * Encoding handler.
    *
-   * @param body Data to compress.
+   * @param data Data to encode.
+   * @param opts Encoding options.
    * @param cb Callback function to use.
    */
-  return function handler(body: Buffer<ArrayBuffer>, cb: CompressCallback) {
+  const encode: EncodingHandler<M> = (data: Buffer<ArrayBuffer>, opts: E, cb: CompressCallback) => {
     // @ts-expect-error this is ok, function overload is not inferred properly
-    return zlib[method](body, compressionOptions[method], cb)
+    return zlib.encode[method](data, createOptions(opts ?? {}, encodingOptions[method] ?? {}), cb)
+  }
+
+  /**
+   * Decoding handler.
+   *
+   * @param data Data to decode.
+   * @param opts Decoding options.
+   * @param cb Callback function to use.
+   */
+  const decode: DecodingHandler<M> = (data: Buffer<ArrayBuffer>, opts: D, cb: CompressCallback) => {
+    // @ts-expect-error this is ok, function overload is not inferred properly
+    return zlib.decode[method](data, createOptions(opts ?? {}, decodingOptions[method] ?? {}), cb)
+  }
+
+  return {
+    encode,
+    decode,
   }
 }

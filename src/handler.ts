@@ -3,14 +3,18 @@ export {
 } from './core/enums'
 
 export {
-  createAsyncCompressionHandler,
-  createStreamCompressionHandler,
-  getCompressionHandler,
+  asStream,
+  toAsync,
+  useHandler,
 } from './core/handler'
 
 export type {
-  CompressionHandler,
+  DecodingHandler,
+  DecodingOptions,
+  EncodingHandler,
   EncodingMethod,
+  EncodingOptions,
+  Handler,
 } from './core/types'
 
 export {
