@@ -1,6 +1,22 @@
 # Changelog
 
 
+## v0.5.2
+
+[compare changes](https://github.com/blokwise/h3-compression/compare/v0.5.1...v0.5.2)
+
+### 🩹 Fixes
+
+- Export of EncodingMethods enum ([b7a9e2e](https://github.com/blokwise/h3-compression/commit/b7a9e2e))
+
+### 🏡 Chore
+
+- Recreate lockfile ([04a2bdc](https://github.com/blokwise/h3-compression/commit/04a2bdc))
+
+### ❤️ Contributors
+
+- Julian Derungs ([@aerophobic](https://github.com/aerophobic))
+
 ## v0.5.1
 
 [compare changes](https://github.com/blokwise/h3-compression/compare/v0.5.0...v0.5.1)
