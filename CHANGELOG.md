@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v0.5.3
+
+[compare changes](https://github.com/blokwise/h3-compression/compare/v0.5.2...v0.5.3)
+
+### 🚀 Enhancements
+
+- Add decoding handler ([4cca3c5](https://github.com/blokwise/h3-compression/commit/4cca3c5))
+
+### ❤️ Contributors
+
+- Julian Derungs ([@aerophobic](https://github.com/aerophobic))
+
 ## v0.5.2
 
 [compare changes](https://github.com/blokwise/h3-compression/compare/v0.5.1...v0.5.2)
