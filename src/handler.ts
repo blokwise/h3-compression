@@ -1,4 +1,4 @@
-export type {
+export {
   EncodingMethods,
 } from './core/enums'
 
