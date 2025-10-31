@@ -4,4 +4,8 @@ export default defineNuxtConfig({
   devtools: {
     enabled: true,
   },
+
+  typescript: {
+    includeWorkspace: true,
+  },
 })

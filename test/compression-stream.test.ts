@@ -2,13 +2,14 @@ import type { App } from 'h3'
 import { createApp, eventHandler, toNodeListener } from 'h3'
 import supertest from 'supertest'
 import { beforeEach, describe, expect, it } from 'vitest'
-import { useCompressionStream } from '../src'
 
 describe('use compression', () => {
   let app: App
   let request: ReturnType<typeof supertest>
 
-  beforeEach(() => {
+  beforeEach(async () => {
+    const { useCompressionStream } = await import('@blokwise/h3-compression')
+
     app = createApp({ debug: true, onBeforeResponse: useCompressionStream })
     app.use('/', eventHandler({
       handler: () => {
