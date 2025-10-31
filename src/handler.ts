@@ -3,18 +3,15 @@ export {
 } from './core/enums'
 
 export {
-  asStream,
-  toAsync,
-  useHandler,
+  toAsyncBufferCreator,
+  useBufferCreator,
 } from './core/handler'
 
 export type {
-  DecodingHandler,
+  BufferCreator,
   DecodingOptions,
-  EncodingHandler,
   EncodingMethod,
   EncodingOptions,
-  Handler,
 } from './core/types'
 
 export {

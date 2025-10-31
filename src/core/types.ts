@@ -123,32 +123,10 @@ export interface CompressOptions {
  *
  * @since 0.5.0
  */
-export type Handler<
+export type BufferCreator<
   O extends EncodingOptions<any> | DecodingOptions<any>,
 > = ((
   input: Buffer<ArrayBuffer>,
   opts: O,
   cb: (error: Error | null, output: Buffer) => void,
 ) => void)
-
-/**
- * Encoding handler type.
- *
- * @param M Encoding method.
- *
- * @since 0.5.3
- */
-export type EncodingHandler<
-  M extends EncodingMethod,
-> = Handler<EncodingOptions<M>>
-
-/**
- * Decoding handler type.
- *
- * @param M Encoding method.
- *
- * @since 0.5.3
- */
-export type DecodingHandler<
-  M extends EncodingMethod,
-> = Handler<DecodingOptions<M>>
