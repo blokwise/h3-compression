@@ -6,6 +6,7 @@ export {
   toAsyncBufferCreator,
   toAsyncStreamWriter,
   useBufferCreator,
+  useReadableCreator,
   useStreamWriter,
 } from './core/handler'
 
@@ -14,6 +15,7 @@ export type {
   DecodingOptions,
   EncodingMethod,
   EncodingOptions,
+  ReadableCreator,
   StreamWriter,
 } from './core/types'
 

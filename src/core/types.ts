@@ -1,4 +1,5 @@
 import type { Buffer } from 'node:buffer'
+import type { PassThrough } from 'node:stream'
 import type { BrotliOptions, ZlibOptions, ZstdOptions } from 'node:zlib'
 import type { EncodingMethods, StreamEncodingMethods } from './enums'
 
@@ -117,7 +118,7 @@ export interface CompressOptions {
 }
 
 /**
- * Handler type.
+ * Buffer creator type.
  *
  * @param O Options type.
  *
@@ -146,3 +147,17 @@ export type StreamWriter<
   opts: O,
   cb: (error: Error | null, output: Buffer) => void,
 ) => void)
+
+/**
+ * Readable creator handler type.
+ *
+ * @param O Options type.
+ *
+ * @since 0.6.0
+ */
+export type ReadableCreator<
+  O extends EncodingOptions<any> | DecodingOptions<any>,
+> = ((
+  input: Buffer<ArrayBuffer>,
+  opts?: O,
+) => PassThrough)
