@@ -130,3 +130,19 @@ export type BufferCreator<
   opts: O,
   cb: (error: Error | null, output: Buffer) => void,
 ) => void)
+
+/**
+ * Stream writer handler type.
+ *
+ * @param O Options type.
+ *
+ * @since 0.6.0
+ */
+export type StreamWriter<
+  O extends EncodingOptions<any> | DecodingOptions<any>,
+> = ((
+  input: Buffer<ArrayBuffer>,
+  destination: NodeJS.WritableStream,
+  opts: O,
+  cb: (error: Error | null, output: Buffer) => void,
+) => void)
