@@ -1,9 +1,10 @@
 import type { H3Event } from 'h3'
 import type { Buffer } from 'node:buffer'
+import type { PassThrough } from 'node:stream'
 import type { AllowedEncodingMethods, CompressOptions, EncodingMethod, RenderResponse, StreamEncodingMethod } from './types'
 import { getRequestHeader, getResponseHeader, setResponseHeader } from 'h3'
 import { EncodingMethods } from './enums'
-import { toAsyncBufferCreator, useBufferCreator } from './handler'
+import { toAsyncBufferCreator, toAsyncStreamWriter, useBufferCreator, useReadableCreator, useStreamWriter } from './handler'
 import { zlib } from './handler/zlib'
 import { getCompressible, getSize, isCompressibleFormat } from './utils'
 
@@ -113,7 +114,7 @@ export async function compress<T extends string | object | unknown>(
   data: T,
   method: EncodingMethod,
   opts: CompressOptions = {},
-): Promise<T | Buffer> {
+): Promise<T | Buffer | PassThrough> {
   if (!getEncodingMethodsOptions(opts.encodingMethods)[method]) {
     return data
   }
@@ -133,12 +134,31 @@ export async function compress<T extends string | object | unknown>(
     setResponseHeader(event, 'Vary', 'Accept-Encoding')
 
     // compress the data
-    const handler = toAsyncBufferCreator(useBufferCreator(method, {
-      contentType: getResponseHeader(event, 'content-type'),
-      size: getSize(data),
-    }).encode)
+    if (opts.chunkedTransferEncoding ?? true) {
+      if (opts.returnReadableStream) {
+        const handler = useReadableCreator(method, {
+          contentType: getResponseHeader(event, 'content-type'),
+          size: getSize(data),
+        }).encode
 
-    return await handler(getCompressible(data))
+        return handler(getCompressible(data))
+      }
+
+      const handler = toAsyncStreamWriter(useStreamWriter(method, {
+        contentType: getResponseHeader(event, 'content-type'),
+        size: getSize(data),
+      }).encode)
+
+      return await handler(event.node.res, getCompressible(data))
+    }
+    else {
+      const handler = toAsyncBufferCreator(useBufferCreator(method, {
+        contentType: getResponseHeader(event, 'content-type'),
+        size: getSize(data),
+      }).encode)
+
+      return await handler(getCompressible(data))
+    }
   }
 
   return data

@@ -110,6 +110,20 @@ export interface CompressOptions {
   threshold?: number
 
   /**
+   * Whether to use `chunked` transfer encoding for responses.
+   *
+   * @default true
+   */
+  chunkedTransferEncoding?: boolean
+
+  /**
+   * Whether to return a `ReadableStream` instead of a `Buffer`.
+   *
+   * @default false
+   */
+  returnReadableStream?: boolean
+
+  /**
    * Allowed encoding methods.
    *
    * @since 0.5.0
