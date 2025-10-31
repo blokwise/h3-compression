@@ -78,8 +78,6 @@ export function useStreamWriter<
         handler,
         destination as NodeJS.WritableStream,
       ).then(() => {
-        // eslint-disable-next-line no-console
-        console.log('encoding done')
         cb(null, Buffer.alloc(0)) // signal completion
       })
     }
@@ -129,8 +127,6 @@ export function useStreamWriter<
         handler,
         destination as NodeJS.WritableStream,
       ).then(() => {
-        // eslint-disable-next-line no-console
-        console.log('decoding done')
         cb(null, Buffer.alloc(0)) // signal completion
       })
     }

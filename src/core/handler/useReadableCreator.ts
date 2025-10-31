@@ -21,10 +21,7 @@ function createTransform(
       Readable.from([buffer]),
       transform,
       proxy,
-    ).then(() => {
-      // eslint-disable-next-line no-console
-      console.log('encoding done')
-    }).catch((err) => {
+    ).catch((err) => {
       proxy.destroy(err)
     })
 
