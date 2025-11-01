@@ -3,11 +3,12 @@ import { listen } from 'listhen'
 
 export async function createH3App<T>(config: {
   body: T
-  chunkedTransferEncoding?: boolean
-  returnReadableStream?: boolean
+  handler: typeof import('@blokwise/h3-compression').useCompression | typeof import('@blokwise/h3-compression').useCompressionStream
+  opts?: {
+    chunkedTransferEncoding?: boolean
+    returnReadableStream?: boolean
+  }
 }) {
-  const { useCompression } = await import('@blokwise/h3-compression')
-
   const app = createApp({
     debug: true,
   })
@@ -18,24 +19,24 @@ export async function createH3App<T>(config: {
     },
   }))
   app.use('/compressed', eventHandler({
-    onBeforeResponse: async (event, response) => {
-      setResponseHeader(event, 'content-type', 'application/json;charset=utf-8')
-
-      await useCompression(event, response, {
-        chunkedTransferEncoding: config.chunkedTransferEncoding,
-        returnReadableStream: config.returnReadableStream,
-      })
-    },
     handler: () => {
       // eslint-disable-next-line no-console
       console.log('received request')
       return config.body
     },
+    onBeforeResponse: async (event, response) => {
+      setResponseHeader(event, 'content-type', 'application/json;charset=utf-8')
+
+      await config.handler(event, response, {
+        chunkedTransferEncoding: config.opts?.chunkedTransferEncoding,
+        returnReadableStream: config.opts?.returnReadableStream,
+      })
+      // eslint-disable-next-line no-console
+      console.log('encoding done')
+    },
   }))
 
-  const listener = await listen(toNodeListener(app), {
-    port: 3000,
-  })
+  const listener = await listen(toNodeListener(app))
 
   return {
     app,

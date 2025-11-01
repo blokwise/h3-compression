@@ -9,7 +9,7 @@ export async function concurrent<T extends readonly unknown[]>(
 ): Promise<T> {
   return await Promise.all(tasks.map(async (task) => {
     // eslint-disable-next-line no-console
-    console.log('shoot')
+    console.log('execute concurrent request')
     return await task()
   })) as unknown as T
 }
