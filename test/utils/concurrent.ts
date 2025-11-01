@@ -8,8 +8,6 @@ export async function concurrent<T extends readonly unknown[]>(
   tasks: ToAsyncHandler<T>,
 ): Promise<T> {
   return await Promise.all(tasks.map(async (task) => {
-    // eslint-disable-next-line no-console
-    console.log('execute concurrent request')
     return await task()
   })) as unknown as T
 }
