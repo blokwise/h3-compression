@@ -1,3 +1,4 @@
+import { getPort } from 'get-port-please'
 import { createApp, eventHandler, setResponseHeader, toNodeListener } from 'h3'
 import { listen } from 'listhen'
 
@@ -43,7 +44,11 @@ export async function createH3App<T>(config: {
     },
   }))
 
-  const listener = await listen(toNodeListener(app))
+  const listener = await listen(toNodeListener(app), {
+    port: await getPort({
+      port: 3000,
+    }),
+  })
 
   return {
     app,
