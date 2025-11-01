@@ -6,5 +6,11 @@ export default defineConfig({
       reporter: ['text', 'clover', 'json'],
       provider: 'v8',
     },
+
+    benchmark: {
+      include: [
+        './test/**/*.bench.ts',
+      ],
+    },
   },
 })

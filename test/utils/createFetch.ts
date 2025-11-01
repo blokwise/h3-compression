@@ -2,6 +2,7 @@ import { ofetch } from 'ofetch'
 
 export function createFetch(config: {
   baseURL: string
+  debug?: boolean
 }) {
   return async (...args: Parameters<typeof ofetch>) => {
     const url = args[0] ?? '/compressed'
@@ -12,8 +13,10 @@ export function createFetch(config: {
 
     const response = await ofetch.raw(url, opts)
 
-    // eslint-disable-next-line no-console
-    console.log('response headers received ', Object.fromEntries(response.headers.entries()))
+    if (config.debug) {
+      // eslint-disable-next-line no-console
+      console.log('response headers received ', Object.fromEntries(response.headers.entries()))
+    }
 
     return {
       status: response.status,

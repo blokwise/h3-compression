@@ -8,9 +8,10 @@ export async function createH3App<T>(config: {
     chunkedTransferEncoding?: boolean
     returnReadableStream?: boolean
   }
+  debug?: boolean
 }) {
   const app = createApp({
-    debug: true,
+    debug: config.debug ?? false,
   })
 
   app.use('/uncompressed', eventHandler({
@@ -20,8 +21,11 @@ export async function createH3App<T>(config: {
   }))
   app.use('/compressed', eventHandler({
     handler: () => {
-      // eslint-disable-next-line no-console
-      console.log('received request')
+      if (config.debug) {
+        // eslint-disable-next-line no-console
+        console.log('received request')
+      }
+
       return config.body
     },
     onBeforeResponse: async (event, response) => {
@@ -31,8 +35,11 @@ export async function createH3App<T>(config: {
         chunkedTransferEncoding: config.opts?.chunkedTransferEncoding,
         returnReadableStream: config.opts?.returnReadableStream,
       })
-      // eslint-disable-next-line no-console
-      console.log('encoding done')
+
+      if (config.debug) {
+        // eslint-disable-next-line no-console
+        console.log('encoding done')
+      }
     },
   }))
 

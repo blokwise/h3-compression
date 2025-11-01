@@ -3,6 +3,8 @@ import type { listen } from 'listhen'
 import { afterAll, beforeAll, describe, expect, it, suite } from 'vitest'
 import { concurrent, createFetch, createH3App, loadJsonData, requestEncoding } from '../utils'
 
+const DEBUG = false
+
 suite('useCompression', async () => {
   const json = {
     body: await loadJsonData('geojson.json'),
@@ -30,12 +32,13 @@ suite('useCompression', async () => {
       const server = await createH3App({
         body: data.body,
         handler: useCompression,
+        debug: DEBUG,
       })
 
       h3App = server.app
       listener = server.listener
       baseURL = server.baseURL
-      fetch = createFetch({ baseURL })
+      fetch = createFetch({ baseURL, debug: DEBUG })
     })
 
     afterAll(async () => {
@@ -118,12 +121,13 @@ suite('useCompression', async () => {
         opts: {
           chunkedTransferEncoding: false,
         },
+        debug: DEBUG,
       })
 
       h3App = server.app
       listener = server.listener
       baseURL = server.baseURL
-      fetch = createFetch({ baseURL })
+      fetch = createFetch({ baseURL, debug: DEBUG })
     })
 
     afterAll(async () => {
@@ -212,12 +216,13 @@ suite('useCompression', async () => {
           chunkedTransferEncoding: true,
           returnReadableStream: true,
         },
+        debug: DEBUG,
       })
 
       h3App = server.app
       listener = server.listener
       baseURL = server.baseURL
-      fetch = createFetch({ baseURL })
+      fetch = createFetch({ baseURL, debug: DEBUG })
     })
 
     afterAll(async () => {

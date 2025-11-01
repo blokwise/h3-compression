@@ -54,6 +54,7 @@
     "dev:prepare": "unbuild --stub && nuxi prepare .playground",
     "dev": "unbuild --stub && nuxi dev .playground",
     "test": "unbuild --stub && vitest",
+    "test:bench": "unbuild --stub && vitest bench",
     "test:types": "unbuild --stub && vitest typecheck",
     "prepack": "unbuild",
     "release": "NPM_TOKEN=$BLOKWISE_RELEE_NPM_TOKEN RELEE_GH_TOKEN=$BLOKWISE_RELEE_GH_TOKEN relee"
