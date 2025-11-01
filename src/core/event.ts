@@ -6,7 +6,7 @@ import { getRequestHeader, getResponseHeader, setResponseHeader } from 'h3'
 import { EncodingMethods } from './enums'
 import { toAsyncBufferCreator, toAsyncStreamWriter, useBufferCreator, useReadableCreator, useStreamWriter } from './handler'
 import { zlib } from './handler/zlib'
-import { getCompressible, getSize, isCompressibleFormat } from './utils'
+import { asString, getCompressible, getSize, isCompressibleFormat } from './utils'
 
 /**
  * Minimum of 1024 bytes are recommend to enable compression as smaller inputs might generate outputs which exceed input sizes.
@@ -180,7 +180,7 @@ export async function compressStream<T extends string | unknown>(
   data: T,
   method: StreamEncodingMethod,
 ): Promise<ReadableStream> {
-  const stream = new Response(data as string).body as ReadableStream
+  const stream = new Response(asString(data)).body as ReadableStream
   const shouldCompress = acceptsEncodingMethod(event, method)
 
   if (shouldCompress) {

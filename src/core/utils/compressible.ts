@@ -17,6 +17,29 @@ export function isCompressibleFormat<T extends string | object>(
 }
 
 /**
+ * Get the provided data as string if possible (`object` or `string`).
+ *
+ * @param data Data to convert.
+ *
+ * @returns Data as `string` or throws an error if not possible.
+ *
+ * @since 0.4.0
+ */
+export function asString<T extends string | object>(
+  data: T | unknown,
+) {
+  if (isString(data)) {
+    return data
+  }
+
+  if (isObject(data)) {
+    return JSON.stringify(data)
+  }
+
+  throw new Error('Data cannot be converted to string')
+}
+
+/**
  * Get the size of the provided data.
  *
  * @param data Data to get the size of.
@@ -28,15 +51,13 @@ export function isCompressibleFormat<T extends string | object>(
 export function getSize<T extends string | object>(
   data: T | unknown,
 ) {
-  if (isString(data)) {
-    return data.length
+  try {
+    return asString(data).length
   }
-
-  if (isObject(data)) {
-    return JSON.stringify(data).length
+  // eslint-disable-next-line unused-imports/no-unused-vars
+  catch (e: Error | unknown) {
+    return -1
   }
-
-  return -1
 }
 
 /**
@@ -51,13 +72,11 @@ export function getSize<T extends string | object>(
 export function getCompressible<T extends string | object>(
   data: T | unknown,
 ) {
-  if (isString(data)) {
-    return Buffer.from(data)
+  try {
+    return Buffer.from(asString(data))
   }
-
-  if (isObject(data)) {
-    return Buffer.from(JSON.stringify(data))
+  // eslint-disable-next-line unused-imports/no-unused-vars
+  catch (e: Error | unknown) {
+    throw new Error('Data is not compressible')
   }
-
-  throw new Error('Response body is not compressable')
 }
