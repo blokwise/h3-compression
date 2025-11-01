@@ -213,8 +213,9 @@ suite('useCompression', async () => {
         body: data.body,
         handler: useCompression,
         opts: {
-          chunkedTransferEncoding: true,
-          returnReadableStream: true,
+          chunkedTransferEncoding: {
+            returnReadableStream: true,
+          },
         },
         debug: DEBUG,
       })

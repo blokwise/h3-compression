@@ -5,8 +5,9 @@ export async function createH3App<T>(config: {
   body: T
   handler: typeof import('@blokwise/h3-compression').useCompression | typeof import('@blokwise/h3-compression').useCompressionStream
   opts?: {
-    chunkedTransferEncoding?: boolean
-    returnReadableStream?: boolean
+    chunkedTransferEncoding?: boolean | {
+      returnReadableStream?: boolean
+    }
   }
   debug?: boolean
 }) {
@@ -33,7 +34,6 @@ export async function createH3App<T>(config: {
 
       await config.handler(event, response, {
         chunkedTransferEncoding: config.opts?.chunkedTransferEncoding,
-        returnReadableStream: config.opts?.returnReadableStream,
       })
 
       if (config.debug) {
