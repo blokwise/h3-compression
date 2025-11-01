@@ -1,7 +1,7 @@
 {
   "name": "@blokwise/h3-compression",
   "type": "module",
-  "version": "0.5.3",
+  "version": "0.6.0",
   "packageManager": "pnpm@10.18.2",
   "description": "Adds compression to h3 request (brotli, gzip, deflate)",
   "author": {

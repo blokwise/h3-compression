@@ -1,6 +1,53 @@
 # Changelog
 
 
+## v0.6.0
+
+[compare changes](https://github.com/blokwise/h3-compression/compare/v0.5.3...v0.6.0)
+
+### 🚀 Enhancements
+
+- Rename buffer creator handler ([bb14c74](https://github.com/blokwise/h3-compression/commit/bb14c74))
+- Add stream writer handler ([939d02d](https://github.com/blokwise/h3-compression/commit/939d02d))
+- Add readable creator handler ([1f20421](https://github.com/blokwise/h3-compression/commit/1f20421))
+- Extend options to enable configuring usage of different handler types and enable chunked transfer encoding by default ([bb960f9](https://github.com/blokwise/h3-compression/commit/bb960f9))
+- Make useCompressionStream work with object-like data ([e051cfd](https://github.com/blokwise/h3-compression/commit/e051cfd))
+
+### 💅 Refactors
+
+- Remove console statements ([1760e88](https://github.com/blokwise/h3-compression/commit/1760e88))
+- Include returnReadableStream in chunkedTransferEncoding option ([400c2ae](https://github.com/blokwise/h3-compression/commit/400c2ae))
+
+### 📦 Build
+
+- Explicitely add scule to deps ([6ba1f78](https://github.com/blokwise/h3-compression/commit/6ba1f78))
+- Specify node engine ([4bcdb5f](https://github.com/blokwise/h3-compression/commit/4bcdb5f))
+
+### 🏡 Chore
+
+- Recreate lockfile ([6237818](https://github.com/blokwise/h3-compression/commit/6237818))
+- Adjust lint-staged to only lint ts files ([d0d61e0](https://github.com/blokwise/h3-compression/commit/d0d61e0))
+- Cleanup dev deps and bump vitest ([406ce58](https://github.com/blokwise/h3-compression/commit/406ce58))
+
+### ✅ Tests
+
+- Update vitest config ([3ef2d3a](https://github.com/blokwise/h3-compression/commit/3ef2d3a))
+- Stub dist ([57dcdb6](https://github.com/blokwise/h3-compression/commit/57dcdb6))
+- Add some test data ([f554bd0](https://github.com/blokwise/h3-compression/commit/f554bd0))
+- Add test utils ([a812f16](https://github.com/blokwise/h3-compression/commit/a812f16))
+- Add tests ([ca206ac](https://github.com/blokwise/h3-compression/commit/ca206ac))
+- Add benchmarking for encoding methods ([94af1ae](https://github.com/blokwise/h3-compression/commit/94af1ae))
+- Add benchmarking for useCompression options ([fe04837](https://github.com/blokwise/h3-compression/commit/fe04837))
+- Update tests ([f0a696f](https://github.com/blokwise/h3-compression/commit/f0a696f))
+- Remove unnecessary console statement ([a56fa42](https://github.com/blokwise/h3-compression/commit/a56fa42))
+- Increase test timeout ([3cc4cc2](https://github.com/blokwise/h3-compression/commit/3cc4cc2))
+- Ensure server ports are created correctly in parallel test executions ([5f9b892](https://github.com/blokwise/h3-compression/commit/5f9b892))
+- Add smaller dataset for non-bench tests ([9357819](https://github.com/blokwise/h3-compression/commit/9357819))
+
+### ❤️ Contributors
+
+- Julian Derungs ([@aerophobic](https://github.com/aerophobic))
+
 ## v0.5.3
 
 [compare changes](https://github.com/blokwise/h3-compression/compare/v0.5.2...v0.5.3)
