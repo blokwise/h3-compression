@@ -16,11 +16,12 @@
   },
   "keywords": [
     "h3",
+    "compression",
     "h3-compression",
+    "deflate",
     "gzip",
     "brotli",
-    "deflate",
-    "compression"
+    "zstd"
   ],
   "sideEffects": false,
   "exports": {
@@ -49,6 +50,9 @@
   "files": [
     "dist/**/*"
   ],
+  "engines": {
+    "node": ">=20.11.0"
+  },
   "scripts": {
     "prepare": "simple-git-hooks",
     "dev:prepare": "unbuild --stub && nuxi prepare .playground",
