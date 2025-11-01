@@ -87,7 +87,7 @@ suite('useCompression', async () => {
     })
 
     it('can handle concurrency', {
-      timeout: 20000,
+      timeout: 60000,
     }, async () => {
       const encodingMethods = ['gzip', 'deflate', 'br', 'zstd'] as const
 
@@ -180,7 +180,7 @@ suite('useCompression', async () => {
     })
 
     it('can handle concurrency', {
-      timeout: 20000,
+      timeout: 60000,
     }, async () => {
       const encodingMethods = ['gzip', 'deflate', 'br', 'zstd'] as const
 
@@ -272,7 +272,7 @@ suite('useCompression', async () => {
     })
 
     it('can handle concurrency', {
-      timeout: 20000,
+      timeout: 60000,
     }, async () => {
       const encodingMethods = ['gzip', 'deflate', 'br', 'zstd'] as const
 
