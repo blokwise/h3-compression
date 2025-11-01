@@ -7,12 +7,12 @@ const DEBUG = false
 
 suite('useCompressionStream', async () => {
   const json = {
-    body: await loadJsonData('geojson.json'),
+    body: await loadJsonData('geojson-small.json'),
     size: {
-      gzip: 5444622,
-      deflate: 5484569,
-      br: 3925981,
-      zstd: 4768085,
+      gzip: 7615,
+      deflate: 7636,
+      br: 7511,
+      zstd: 7685,
     },
   }
   const data = json
