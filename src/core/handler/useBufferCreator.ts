@@ -5,7 +5,7 @@ import { decodingOptions, encodingOptions } from './options'
 import { zlib } from './zlib'
 
 /**
- * Convert a callback-based handler to an `Promise`-based one.
+ * Convert a callback-based `BufferCreator` to a `Promise`-based one.
  *
  * @param handler Handler to convert.
  *
@@ -37,7 +37,7 @@ export function toAsyncBufferCreator<
 }
 
 /**
- * Use encoding/decoding handler based on the encoding method.
+ * Use encoding/decoding handler which return the processed data as a buffer.
  *
  * @param method Encoding method.
  * @param options Options to configure handler encoding/decoding options with.

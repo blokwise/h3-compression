@@ -8,7 +8,7 @@ import { decodingOptions, encodingOptions } from './options'
 import { zlib } from './zlib'
 
 /**
- * Convert a callback-based handler to a `Readable`-based one.
+ * Convert a callback-based `StreamWriter` to a `Promise`-based one.
  *
  * @param handler Handler to convert.
  *
@@ -40,6 +40,16 @@ export function toAsyncStreamWriter<
   })
 }
 
+/**
+ * Use encoding/decoding handler which write to a specified destination stream.
+ *
+ * @param method Encoding method.
+ * @param options Options to configure handler encoding/decoding options with.
+ * @param options.contentType Content type of the data to be processed. This only affects encoding options for 'br'. If omitted, `br` encoding options are set to generic mode.
+ * @param options.size Size of the unencoded data. This affects encoding options for 'br'. A hint to the unencoded size will be included in the encoded data to improve decoding.
+ *
+ * @since 0.6.0
+ */
 export function useStreamWriter<
   M extends EncodingMethod,
   E extends EncodingOptions<M>,

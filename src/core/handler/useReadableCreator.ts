@@ -6,6 +6,13 @@ import { upperFirst } from 'scule'
 import { decodingOptions, encodingOptions } from './options'
 import { zlib } from './zlib'
 
+/**
+ * Create a stream transform pipe.
+ *
+ * @param transform Transformer to apply.
+ *
+ * @since 0.6.0
+ */
 function createTransform(
   transform: NodeJS.ReadWriteStream,
 ) {
@@ -29,6 +36,16 @@ function createTransform(
   }
 }
 
+/**
+ * Use encoding/decoding handler which return the processed data as a readable stream.
+ *
+ * @param method Encoding method.
+ * @param options Options to configure handler encoding/decoding options with.
+ * @param options.contentType Content type of the data to be processed. This only affects encoding options for 'br'. If omitted, `br` encoding options are set to generic mode.
+ * @param options.size Size of the unencoded data. This affects encoding options for 'br'. A hint to the unencoded size will be included in the encoded data to improve decoding.
+ *
+ * @since 0.6.0
+ */
 export function useReadableCreator<
   M extends EncodingMethod,
   E extends EncodingOptions<M>,

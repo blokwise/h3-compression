@@ -2,6 +2,7 @@ import type { H3Event } from 'h3'
 import type { Buffer } from 'node:buffer'
 import type { PassThrough } from 'node:stream'
 import type { AllowedEncodingMethods, CompressOptions, EncodingMethod, RenderResponse, StreamEncodingMethod } from './types'
+import { isObject } from '@antfu/utils'
 import { getRequestHeader, getResponseHeader, setResponseHeader } from 'h3'
 import { EncodingMethods } from './enums'
 import { toAsyncBufferCreator, toAsyncStreamWriter, useBufferCreator, useReadableCreator, useStreamWriter } from './handler'
@@ -135,7 +136,7 @@ export async function compress<T extends string | object | unknown>(
 
     // compress the data
     if (opts.chunkedTransferEncoding ?? true) {
-      if (opts.returnReadableStream) {
+      if (isObject(opts.chunkedTransferEncoding) && opts.chunkedTransferEncoding.returnReadableStream) {
         const handler = useReadableCreator(method, {
           contentType: getResponseHeader(event, 'content-type'),
           size: getSize(data),

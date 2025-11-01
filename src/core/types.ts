@@ -112,16 +112,20 @@ export interface CompressOptions {
   /**
    * Whether to use `chunked` transfer encoding for responses.
    *
-   * @default true
-   */
-  chunkedTransferEncoding?: boolean
-
-  /**
-   * Whether to return a `ReadableStream` instead of a `Buffer`.
+   * If enabled and `returnReadableStream` option is not set to `true`, the compressed data will be directly written to the response `event.node.res` stream in chunks.
    *
-   * @default false
+   * @default true
+   *
+   * @since 0.6.0
    */
-  returnReadableStream?: boolean
+  chunkedTransferEncoding?: boolean | {
+    /**
+     * Whether to return a `ReadableStream` instead of writing directly to the response.
+     *
+     * @default false
+     */
+    returnReadableStream?: boolean
+  }
 
   /**
    * Allowed encoding methods.
